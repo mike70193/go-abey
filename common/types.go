@@ -26,6 +26,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/abeychain/go-abey/common/base58"
 	"github.com/abeychain/go-abey/common/hexutil"
 	"golang.org/x/crypto/sha3"
 )
@@ -218,6 +219,19 @@ func (a Address) Hex() string {
 // String implements fmt.Stringer.
 func (a Address) String() string {
 	return a.Hex()
+}
+
+func (a Address) StringToAbey() string {
+	return "abey" + base58.Encode(a[:])
+}
+
+func (a *Address) FromAbeyString(vc string) error {
+	if 0 != strings.Compare("abey",vc[0:4]) {
+		return base58.ErrInvalidFormat
+	}
+	b := base58.Decode(vc[4:])
+	a.SetBytes(b)
+	return nil
 }
 
 // Format implements fmt.Formatter, forcing the byte slice to be formatted as is,
