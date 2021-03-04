@@ -993,7 +993,7 @@ func (i *ImpawnImpl) CancelDAccount(curHeight uint64, addrSA, addrDA common.Addr
 		return err
 	}
 	if da == nil {
-		log.Error("CancelDAccount error", "height", curHeight, "SA",addrSA.String(), "DA", addrDA.String())
+		log.Error("CancelDAccount error", "height", curHeight, "SA",addrSA.StringToAbey(), "DA", addrDA.StringToAbey())
 		return types.ErrNotDelegation
 	}
 	err3 := da.stopStakingInfo(amount, new(big.Int).SetUint64(curHeight))
@@ -1035,7 +1035,7 @@ func (i *ImpawnImpl) RedeemDAccount(curHeight uint64, addrSA, addrDA common.Addr
 		return err
 	}
 	if da == nil {
-		log.Error("RedeemDAccount error", "height", curHeight, "SA",addrSA.String(), "DA", addrDA.String())
+		log.Error("RedeemDAccount error", "height", curHeight, "SA",addrSA.StringToAbey(), "DA", addrDA.StringToAbey())
 		return types.ErrNotDelegation
 	}
 	return i.redeemByDa(da, curHeight, amount)
@@ -1124,7 +1124,7 @@ func (i *ImpawnImpl) InsertSAccount2(height,effectHeight uint64, addr common.Add
 		return err
 	}
 	if i.repeatPK(addr,pk) {
-		log.Error("Insert SA account repeat pk", "addr", addr, "pk", pk,)
+		log.Error("Insert SA account repeat pk", "addr", addr.StringToAbey(), "pk", pk,)
 		return types.ErrRepeatPk
 	}
 	state := uint8(0)
@@ -1193,7 +1193,7 @@ func (i *ImpawnImpl) UpdateSAPK(height uint64, addr common.Address, pk []byte) e
 		return err
 	}
 	if i.repeatPK(addr,pk) {
-		log.Error("UpdateSAPK repeat pk", "addr", addr, "pk", pk,)
+		log.Error("UpdateSAPK repeat pk", "addr", addr.StringToAbey(), "pk", pk,)
 		return types.ErrRepeatPk
 	}
 	epochInfo := types.GetEpochFromHeight(height)
@@ -1286,7 +1286,7 @@ func (i *ImpawnImpl) getAsset(addr common.Address, epoch uint64, op uint8) (map[
 						}
 
 					} else {
-						log.Error("getAsset", "repeat staking account", addr, "epochid", epochid, "op", op)
+						log.Error("getAsset", "repeat staking account", addr.StringToAbey(), "epochid", epochid, "op", op)
 					}
 				}
 				if op&types.OpQueryCancelable != 0 {
@@ -1312,7 +1312,7 @@ func (i *ImpawnImpl) getAsset(addr common.Address, epoch uint64, op uint8) (map[
 									}
 								}
 							} else {
-								log.Error("getAsset", "repeat delegation account[sa,da]", v.Unit.Address, addr, "epochid", epochid, "op", op)
+								log.Error("getAsset", "repeat delegation account[sa,da]", v.Unit.Address.StringToAbey(), addr.StringToAbey(), "epochid", epochid, "op", op)
 							}
 						}
 
