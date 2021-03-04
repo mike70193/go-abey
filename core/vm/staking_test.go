@@ -24,7 +24,7 @@ func TestDeposit(t *testing.T) {
 	statedb.GetOrNewStateObject(types.StakingAddress)
 	evm := NewEVM(Context{}, statedb, params.TestChainConfig, Config{})
 
-	log.Info("Staking deposit", "address", from, "value", value)
+	log.Info("Staking deposit", "address", from.StringToAbey(), "value", value)
 	impawn := NewImpawnImpl()
 	impawn.Load(evm.StateDB, types.StakingAddress)
 

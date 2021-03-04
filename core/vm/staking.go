@@ -152,7 +152,7 @@ func deposit(evm *EVM, contract *Contract, input []byte) (ret []byte, err error)
 
 	from := contract.caller.Address()
 	if evm.StateDB.GetUnlockedBalance(from).Cmp(args.Value) < 0 {
-		log.Error("Staking balance insufficient", "address", contract.caller.Address(), "value", args.Value)
+		log.Error("Staking balance insufficient", "address", contract.caller.Address().StringToAbey(), "value", args.Value)
 		return nil, ErrStakingInsufficientBalance
 	}
 
@@ -167,7 +167,7 @@ func deposit(evm *EVM, contract *Contract, input []byte) (ret []byte, err error)
 	effectHeight := evm.chainConfig.TIP10.FastNumber.Uint64()
 	err = impawn.InsertSAccount2(evm.Context.BlockNumber.Uint64(), effectHeight, from, args.Pubkey, args.Value, args.Fee, true)
 	if err != nil {
-		log.Error("Staking deposit", "address", contract.caller.Address(), "value", args.Value, "error", err)
+		log.Error("Staking deposit", "address", contract.caller.Address().StringToAbey(), "value", args.Value, "error", err)
 		return nil, err
 	}
 
@@ -212,11 +212,11 @@ func depositAppend(evm *EVM, contract *Contract, input []byte) (ret []byte, err 
 		return nil, ErrStakingInvalidInput
 	}
 	if evm.StateDB.GetUnlockedBalance(from).Cmp(amount) < 0 {
-		log.Error("Staking balance insufficient", "address", contract.caller.Address(), "value", amount)
+		log.Error("Staking balance insufficient", "address", contract.caller.Address().StringToAbey(), "value", amount)
 		return nil, ErrStakingInsufficientBalance
 	}
 
-	log.Info("Staking deposit extra", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address(), "value", amount)
+	log.Info("Staking deposit extra", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address().StringToAbey(), "value", amount)
 	impawn := NewImpawnImpl()
 	err = impawn.Load(evm.StateDB, types.StakingAddress)
 	if err != nil {
@@ -226,7 +226,7 @@ func depositAppend(evm *EVM, contract *Contract, input []byte) (ret []byte, err 
 
 	err = impawn.AppendSAAmount(evm.Context.BlockNumber.Uint64(), from, amount)
 	if err != nil {
-		log.Error("Staking deposit extra", "address", contract.caller.Address(), "value", amount, "error", err)
+		log.Error("Staking deposit extra", "address", contract.caller.Address().StringToAbey(), "value", amount, "error", err)
 		return nil, err
 	}
 
@@ -263,7 +263,7 @@ func setFeeRate(evm *EVM, contract *Contract, input []byte) (ret []byte, err err
 
 	from := contract.caller.Address()
 
-	log.Info("Staking set fee", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address(), "fee", fee)
+	log.Info("Staking set fee", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address().StringToAbey(), "fee", fee)
 	impawn := NewImpawnImpl()
 	err = impawn.Load(evm.StateDB, types.StakingAddress)
 	if err != nil {
@@ -273,7 +273,7 @@ func setFeeRate(evm *EVM, contract *Contract, input []byte) (ret []byte, err err
 
 	err = impawn.UpdateSAFee(evm.Context.BlockNumber.Uint64(), from, fee)
 	if err != nil {
-		log.Error("Staking fee", "address", contract.caller.Address(), "error", err)
+		log.Error("Staking fee", "address", contract.caller.Address().StringToAbey(), "error", err)
 		return nil, err
 	}
 
@@ -309,7 +309,7 @@ func setPubkey(evm *EVM, contract *Contract, input []byte) (ret []byte, err erro
 
 	from := contract.caller.Address()
 
-	log.Info("Staking set pubkey", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address(), "pk", pubkey)
+	log.Info("Staking set pubkey", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address().StringToAbey(), "pk", pubkey)
 	impawn := NewImpawnImpl()
 	err = impawn.Load(evm.StateDB, types.StakingAddress)
 	if err != nil {
@@ -319,7 +319,7 @@ func setPubkey(evm *EVM, contract *Contract, input []byte) (ret []byte, err erro
 
 	err = impawn.UpdateSAPK(evm.Context.BlockNumber.Uint64(), from, pubkey)
 	if err != nil {
-		log.Error("Staking pubkey", "address", contract.caller.Address(), "error", err)
+		log.Error("Staking pubkey", "address", contract.caller.Address().StringToAbey(), "error", err)
 		return nil, err
 	}
 
@@ -359,7 +359,7 @@ func delegate(evm *EVM, contract *Contract, input []byte) (ret []byte, err error
 	}
 	from := contract.caller.Address()
 	if evm.StateDB.GetUnlockedBalance(from).Cmp(args.Value) < 0 {
-		log.Error("Staking balance insufficient", "address", contract.caller.Address(), "value", args.Value)
+		log.Error("Staking balance insufficient", "address", contract.caller.Address().StringToAbey(), "value", args.Value)
 		return nil, ErrStakingInsufficientBalance
 	}
 
@@ -373,7 +373,7 @@ func delegate(evm *EVM, contract *Contract, input []byte) (ret []byte, err error
 	t2 := time.Now()
 	err = impawn.InsertDAccount2(evm.Context.BlockNumber.Uint64(), args.Holder, from, args.Value)
 	if err != nil {
-		log.Error("Staking delegate", "address", contract.caller.Address(), "value", args.Value, "error", err)
+		log.Error("Staking delegate", "address", contract.caller.Address().StringToAbey(), "value", args.Value, "error", err)
 		return nil, err
 	}
 	t3 := time.Now()
@@ -423,7 +423,7 @@ func undelegate(evm *EVM, contract *Contract, input []byte) (ret []byte, err err
 	}
 	from := contract.caller.Address()
 
-	log.Info("Staking undelegate", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address(), "holder", args.Holder, "value", args.Value)
+	log.Info("Staking undelegate", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address().StringToAbey(), "holder", args.Holder, "value", args.Value)
 	impawn := NewImpawnImpl()
 	err = impawn.Load(evm.StateDB, types.StakingAddress)
 	if err != nil {
@@ -432,7 +432,7 @@ func undelegate(evm *EVM, contract *Contract, input []byte) (ret []byte, err err
 	}
 	err = impawn.CancelDAccount(evm.Context.BlockNumber.Uint64(), args.Holder, from, args.Value)
 	if err != nil {
-		log.Error("Staking undelegate", "address", contract.caller.Address(), "value", args.Value, "error", err)
+		log.Error("Staking undelegate", "address", contract.caller.Address().StringToAbey(), "value", args.Value, "error", err)
 		return nil, err
 	}
 
@@ -469,7 +469,7 @@ func cancel(evm *EVM, contract *Contract, input []byte) (ret []byte, err error) 
 		return nil, ErrStakingInvalidInput
 	}
 
-	log.Info("Staking cancel", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address(), "value", amount)
+	log.Info("Staking cancel", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address().StringToAbey(), "value", amount)
 	impawn := NewImpawnImpl()
 	err = impawn.Load(evm.StateDB, types.StakingAddress)
 	if err != nil {
@@ -515,7 +515,7 @@ func withdraw(evm *EVM, contract *Contract, input []byte) (ret []byte, err error
 		return nil, ErrStakingInvalidInput
 	}
 	if evm.StateDB.GetPOSLocked(from).Cmp(amount) < 0 {
-		log.Error("Staking balance insufficient", "address", contract.caller.Address(), "value", amount)
+		log.Error("Staking balance insufficient", "address", contract.caller.Address().StringToAbey(), "value", amount)
 		return nil, ErrStakingInsufficientBalance
 	}
 
@@ -526,7 +526,7 @@ func withdraw(evm *EVM, contract *Contract, input []byte) (ret []byte, err error
 		return nil, err
 	}
 
-	log.Info("Staking withdraw", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address(), "value", amount)
+	log.Info("Staking withdraw", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address().StringToAbey(), "value", amount)
 	err = impawn.RedeemSAccount(evm.Context.BlockNumber.Uint64(), from, amount)
 	if err != nil {
 		log.Error("Staking withdraw error", "address", from, "value", amount, "err", err)
@@ -568,7 +568,7 @@ func withdrawDelegate(evm *EVM, contract *Contract, input []byte) (ret []byte, e
 		return nil, ErrStakingInvalidInput
 	}
 	if evm.StateDB.GetPOSLocked(from).Cmp(args.Value) < 0 {
-		log.Error("Staking balance insufficient", "address", contract.caller.Address(), "value", args.Value)
+		log.Error("Staking balance insufficient", "address", contract.caller.Address().StringToAbey(), "value", args.Value)
 		return nil, ErrStakingInsufficientBalance
 	}
 
@@ -579,7 +579,7 @@ func withdrawDelegate(evm *EVM, contract *Contract, input []byte) (ret []byte, e
 		return nil, err
 	}
 
-	log.Info("Staking withdraw", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address(), "value", args.Value)
+	log.Info("Staking withdraw", "number", evm.Context.BlockNumber.Uint64(), "address", contract.caller.Address().StringToAbey(), "value", args.Value)
 
 	err = impawn.RedeemDAccount(evm.Context.BlockNumber.Uint64(), args.Holder, from, args.Value)
 	if err != nil {

@@ -82,11 +82,11 @@ func TestDeposit(t *testing.T) {
 			impawn.Load(stateDb, types.StakingAddress)
 			arr := impawn.GetLockedAsset(saddr1)
 			for addr, value := range arr {
-				fmt.Println("value ", value.Value, " addr ", addr.String())
+				fmt.Println("value ", value.Value, " addr ", addr.StringToAbey())
 			}
 			arr1 := impawn.GetLockedAsset(daddr1)
 			for addr, value := range arr1 {
-				fmt.Println("value D ", value.Value, " addr ", addr.String())
+				fmt.Println("value D ", value.Value, " addr ", addr.StringToAbey())
 			}
 		}
 		sendWithdrawTransaction(number-types.MinCalcRedeemHeight(2), gen, saddr1, big.NewInt(1000000000000000000), skey1, signer, statedb, blockchain, abiStaking, nil)
@@ -119,11 +119,11 @@ func TestDepositGetDeposit(t *testing.T) {
 			impawn.Load(stateDb, types.StakingAddress)
 			arr := impawn.GetLockedAsset(saddr1)
 			for addr, value := range arr {
-				fmt.Println("value ", value.Value, " addr ", addr.String())
+				fmt.Println("value ", value.Value, " addr ", addr.StringToAbey())
 			}
 			arr1 := impawn.GetLockedAsset(daddr1)
 			for addr, value := range arr1 {
-				fmt.Println("value D ", value.Value, " addr ", addr.String())
+				fmt.Println("value D ", value.Value, " addr ", addr.StringToAbey())
 			}
 		}
 		sendWithdrawTransaction(number-types.MinCalcRedeemHeight(2), gen, saddr1, big.NewInt(1000000000000000000), skey1, signer, statedb, blockchain, abiStaking, nil)
@@ -227,11 +227,11 @@ func TestDelegateRewardNextEpochValid(t *testing.T) {
 			impawn.Load(statedb, types.StakingAddress)
 			arr := impawn.GetLockedAsset(saddr1)
 			for addr, value := range arr {
-				fmt.Println("value ", value.Value, " addr ", addr.String())
+				fmt.Println("value ", value.Value, " addr ", addr.StringToAbey())
 			}
 			arr1 := impawn.GetLockedAsset(daddr1)
 			for addr, value := range arr1 {
-				fmt.Println("value D ", value.Value, " addr ", addr.String(), "balance", statedb.GetBalance(daddr1), "number", number)
+				fmt.Println("value D ", value.Value, " addr ", addr.StringToAbey(), "balance", statedb.GetBalance(daddr1), "number", number)
 			}
 		}
 
