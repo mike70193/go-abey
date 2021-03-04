@@ -365,7 +365,7 @@ func PrintBalance(conn *abeyclient.Client, from common.Address) {
 	trueValue := new(big.Float).Quo(fbalance, big.NewFloat(math.Pow10(18)))
 
 	sbalance, err := conn.BalanceAt(context.Background(), types.StakingAddress, nil)
-	fmt.Println("Your wallet balance is ", trueValue, "'true ", " current Total Stake ", types.ToTrue(sbalance))
+	fmt.Println("Your wallet balance is ", trueValue, "'true ", " current Total Stake ", types.ToAbey(sbalance))
 }
 
 func loadPrivate(ctx *cli.Context) {

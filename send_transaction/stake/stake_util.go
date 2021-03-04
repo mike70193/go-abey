@@ -186,7 +186,7 @@ func filterLogs(client *abeyclient.Client) {
 				if err != nil {
 					log.Fatal(err)
 				}
-				fmt.Println("value", types.ToTrue(deposit.Value), "fee ", deposit.Fee, "pk", hex.EncodeToString(deposit.Pubkey)) // foo
+				fmt.Println("value", types.ToAbey(deposit.Value), "fee ", deposit.Fee, "pk", hex.EncodeToString(deposit.Pubkey)) // foo
 			}
 
 			for i := range vLog.Topics {
