@@ -2096,6 +2096,115 @@ require = (function e(t, n, r) {
             return json.name + '(' + typeName + ')';
         };
 
+
+        var base58Encode = function (buffer) {
+            var ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+            var ALPHABET_MAP = {};
+            var BASE = 58;
+            for (var i = 0; i < ALPHABET.length; i++) {
+                ALPHABET_MAP[ALPHABET.charAt(i)] = i;
+            }
+            if (buffer.length === 0) return '';
+            var i,
+                j,
+                digits = [0];
+            for (i = 0; i < buffer.length; i++) {
+                for (j = 0; j < digits.length; j++){
+                    digits[j] <<= 8;
+                }
+                digits[0] += buffer[i];
+                var carry = 0;
+                for (j = 0; j < digits.length; ++j) {
+                    digits[j] += carry;
+                    carry = (digits[j] / BASE) | 0;
+                    digits[j] %= BASE;
+                }
+                while (carry) {
+                    digits.push(carry % BASE);
+                    carry = (carry / BASE) | 0;
+                }
+            }
+            // deal with leading zeros
+            for (i = 0; buffer[i] === 0 && i < buffer.length - 1; i++) digits.push(0);
+            return digits
+                .reverse()
+                .map(function(digit) {
+                    return ALPHABET[digit];
+                })
+                .join('');
+        }
+
+
+        var base58Decode = function (string) {
+            var ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+            var ALPHABET_MAP = {};
+            var BASE = 58;
+            for (var i = 0; i < ALPHABET.length; i++) {
+                ALPHABET_MAP[ALPHABET.charAt(i)] = i;
+            }
+            if (string.length === 0) return [];
+            var i,
+                j,
+                bytes = [0];
+            for (i = 0; i < string.length; i++) {
+                var c = string[i];
+                if (!(c in ALPHABET_MAP)) throw new Error('Non-base58 character');
+                for (j = 0; j < bytes.length; j++) bytes[j] *= BASE;
+                bytes[0] += ALPHABET_MAP[c];
+                var carry = 0;
+                for (j = 0; j < bytes.length; ++j) {
+                    bytes[j] += carry;
+                    carry = bytes[j] >> 8;
+                    // 0xff --> 11111111
+                    bytes[j] &= 0xff;
+                }
+                while (carry) {
+                    bytes.push(carry & 0xff);
+                    carry >>= 8;
+                }
+            }
+            // deal with leading zeros
+            for (i = 0; string[i] === '1' && i < string.length - 1; i++) bytes.push(0);
+            return bytes.reverse();
+
+        }
+
+        var strToBytes = function  (str) {
+
+            var pos = 0;
+            var len = str.length;
+            if(len %2 != 0)
+            {
+                return null;
+            }
+            len /= 2;
+            var hexA = new Array();
+            for(var i=0; i<len; i++)
+            {
+                var s = str.substr(pos, 2);
+                var v = parseInt(s, 16);
+                pos += 2;
+                if (i === 0 ){
+                    continue
+                }
+                hexA.push(v);
+            }
+            return hexA;
+        }
+
+        var bytesToStr = function (arr) {
+
+            var str = "";
+            for (var i = 0; i < arr.length; i++) {
+                var tmp = arr[i].toString(16);
+                if (tmp.length == 1) {
+                    tmp = "0" + tmp;
+                }
+                str += tmp;
+            }
+            return str;
+        }
+
         /**
          * Should be called to get display name of contract function
          *
@@ -2503,6 +2612,10 @@ require = (function e(t, n, r) {
             toAscii: toAscii,
             fromUtf8: fromUtf8,
             fromAscii: fromAscii,
+            base58Encode: base58Encode,
+            base58Decode: base58Decode,
+            strToBytes: strToBytes,
+            bytesToStr: bytesToStr,
             transformToFullName: transformToFullName,
             extractDisplayName: extractDisplayName,
             extractTypeName: extractTypeName,
@@ -3891,6 +4004,9 @@ require = (function e(t, n, r) {
                 tx.blockNumber = utils.toDecimal(tx.blockNumber);
             if (tx.transactionIndex !== null)
                 tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
+
+            tx.from = outputAddressFormatter(tx.from);
+            tx.to = outputAddressFormatter(tx.to);
             tx.nonce = utils.toDecimal(tx.nonce);
             tx.gas = utils.toDecimal(tx.gas);
             tx.gasPrice = utils.toBigNumber(tx.gasPrice);
@@ -3922,6 +4038,16 @@ require = (function e(t, n, r) {
             return receipt;
         };
 
+        var outputCoinbaseFormatter = function (result) {
+
+            for(var i=0; i<result.members.length; i++)
+            {
+                var address = utils.base58Encode(utils.strToBytes(result.members[i].coinbase));
+                result.members[i].coinbaseAbey = "abey" + address;
+            }
+            return result;
+        };
+
         /**
          * Formats the output of a block to its proper values
          *
@@ -3933,6 +4059,7 @@ require = (function e(t, n, r) {
 
             // transform to number
             block.gasLimit = utils.toDecimal(block.gasLimit);
+            block.maker = outputAddressFormatter(block.maker);
             block.gasUsed = utils.toDecimal(block.gasUsed);
             block.size = utils.toDecimal(block.size);
             block.timestamp = utils.toDecimal(block.timestamp);
@@ -3964,6 +4091,7 @@ require = (function e(t, n, r) {
             // transform to number
             block.size = utils.toDecimal(block.size);
             block.timestamp = utils.toDecimal(block.timestamp);
+            block.miner = outputAddressFormatter(block.miner);
             if (block.number !== null)
                 block.number = utils.toDecimal(block.number);
 
@@ -4063,6 +4191,13 @@ require = (function e(t, n, r) {
         };
 
         var inputAddressFormatter = function (address) {
+
+            if (address.substring(4,0) === "abey") {
+
+                address = address.substring(address.length,4)
+                address = utils.bytesToStr(utils.base58Decode(address))
+            }
+
             var iban = new Iban(address);
             if (iban.isValid() && iban.isDirect()) {
                 return '0x' + iban.address();
@@ -4095,6 +4230,37 @@ require = (function e(t, n, r) {
             return result;
         };
 
+        /**
+         * Formats input value to byte rep
+         * resentation of int
+         * If value is negative, return it's two's complement
+         * If the value is floating point, round it down
+         *
+         * @method formatInputInt
+         * @param {String|Number|Base58} value that needs to be formatted
+         * @returns {String}
+         */
+
+
+         var outputAddressFormatter = function (result) {
+             console.log(result)
+             var address = utils.base58Encode(utils.strToBytes(result));
+            return "abey" + address;
+         };
+
+         var outputAddressFormatters = function (result) {
+
+             var hexA = new Array();
+             for(var i=0; i<result.length; i++)
+             {
+                 var address = utils.base58Encode(utils.strToBytes(result[i]));
+                 hexA.push("abey" +address);
+             }
+
+             return hexA;
+         };
+
+
         module.exports = {
             inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
             inputBlockNumberFormatter: inputBlockNumberFormatter,
@@ -4106,11 +4272,14 @@ require = (function e(t, n, r) {
             outputBigNumberFormatter: outputBigNumberFormatter,
             outputTransactionFormatter: outputTransactionFormatter,
             outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
+            outputCoinbaseFormatter: outputCoinbaseFormatter,
             outputBlockFormatter: outputBlockFormatter,
             outputSnailFormatter: outputSnailFormatter,
             outputLogFormatter: outputLogFormatter,
             outputPostFormatter: outputPostFormatter,
-            outputSyncingFormatter: outputSyncingFormatter
+            outputSyncingFormatter: outputSyncingFormatter,
+            outputAddressFormatter: outputAddressFormatter,
+            outputAddressFormatters: outputAddressFormatters
         };
 
 
@@ -5531,8 +5700,8 @@ require = (function e(t, n, r) {
                 params: 2,
                 inputFormatter: [formatters.inputBlockNumberFormatter, function (val) {
                     return !!val;
-                }]
-                // outputFormatter: formatters.outputSnailFormatter
+                }],
+                outputFormatter: formatters.outputSnailFormatter
             });
 
             var getStateChangeByFastNumber = new Method({
@@ -5813,7 +5982,8 @@ require = (function e(t, n, r) {
                 }),
                 new Property({
                     name: 'committeeBase',
-                    getter: 'abey_committeeBase'
+                    getter: 'abey_committeeBase',
+                    outputFormatter: formatters.outputAddressFormatter
                 }),
                 new Property({
                     name: 'isCommitteeMember',
@@ -5840,7 +6010,8 @@ require = (function e(t, n, r) {
                 }),
                 new Property({
                     name: 'accounts',
-                    getter: 'abey_accounts'
+                    getter: 'abey_accounts',
+                    outputFormatter: formatters.outputAddressFormatters
                 }),
                 new Property({
                     name: 'blockNumber',
@@ -6016,13 +6187,15 @@ require = (function e(t, n, r) {
                 name: 'newAccount',
                 call: 'personal_newAccount',
                 params: 1,
-                inputFormatter: [null]
+                inputFormatter: [null],
+                outputFormatter: formatters.outputAddressFormatter
             });
 
             var importRawKey = new Method({
                 name: 'importRawKey',
                 call: 'personal_importRawKey',
-                params: 2
+                params: 2,
+                outputFormatter: formatters.outputAddressFormatter
             });
 
             var sign = new Method({
@@ -6074,7 +6247,8 @@ require = (function e(t, n, r) {
             return [
                 new Property({
                     name: 'listAccounts',
-                    getter: 'personal_listAccounts'
+                    getter: 'personal_listAccounts',
+                    outputFormatter: formatters.outputAddressFormatters
                 })
             ];
         };
