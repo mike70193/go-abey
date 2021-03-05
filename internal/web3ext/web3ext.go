@@ -696,7 +696,8 @@ web3._extend({
 							for (var j = 0; j < sa.unit.value.length; j++) {
 								sa.unit.value[j].amount = web3._extend.utils.toBigNumber(sa.unit.value[j].amount);
 								sa.unit.value[j].height = web3._extend.utils.toBigNumber(sa.unit.value[j].height);
-							}						
+							}	
+							sa.unit.address = web3._extend.formatters.outputAddressFormatter(sa.unit.address);					
 						}
 						if(sa.unit.redeemInfo !== null) {
 							for (var j = 0; j < sa.unit.redeemInfo.length; j++) {
@@ -709,7 +710,9 @@ web3._extend({
 									for (var j = 0; j < sa.delegation[m].unit.value.length; j++) {
 										sa.delegation[m].unit.value[j].amount = web3._extend.utils.toBigNumber(sa.delegation[m].unit.value[j].amount);
 										sa.delegation[m].unit.value[j].height = web3._extend.utils.toBigNumber(sa.delegation[m].unit.value[j].height);
-									}						
+										sa.delegation[m].unit.address = web3._extend.formatters.outputAddressFormatter(sa.delegation[m].unit.address);
+									}
+							
 								}
 								if(sa.delegation[m].unit.redeemInfo !== null) {
 									for (var j = 0; j < sa.delegation[m].unit.redeemInfo.length; j++) {
@@ -735,7 +738,8 @@ web3._extend({
 						for (var j = 0; j < sas[i].stakingValue.length; j++) {
 							sas[i].stakingValue[j].amount = web3._extend.utils.toBigNumber(sas[i].stakingValue[j].amount);
 							sas[i].stakingValue[j].height = web3._extend.utils.toDecimal(sas[i].stakingValue[j].height);
-						}						
+						}	
+						sas[i].address = web3._extend.formatters.outputAddressFormatter(sas[i].address);					
 					}
 					formatted.push(sas[i]);
 				}
@@ -756,6 +760,7 @@ web3._extend({
 							las[i].lockValue[j].epochID = web3._extend.utils.toDecimal(las[i].lockValue[j].epochID);
 							las[i].lockValue[j].height = web3._extend.utils.toBigNumber(las[i].lockValue[j].height);
 						}
+						las[i].address = web3._extend.formatters.outputAddressFormatter(las[i].address);
 					}
 					formatted.push(las[i]);
 				}
@@ -771,6 +776,7 @@ web3._extend({
 				var formatted = [];
 				for (var i = 0; i < cas.length; i++) {
 					cas[i].value = web3._extend.utils.toBigNumber(cas[i].value)
+					cas[i].address = web3._extend.formatters.outputAddressFormatter(cas[i].address);
 					formatted.push(cas[i]);
 				}
 				return formatted;
@@ -787,7 +793,8 @@ web3._extend({
 						for (var j = 0; j < sa.unit.value.length; j++) {
 							sa.unit.value[j].amount = web3._extend.utils.toBigNumber(sa.unit.value[j].amount);
 							sa.unit.value[j].height = web3._extend.utils.toBigNumber(sa.unit.value[j].height);
-						}						
+						}	
+						sa.unit.address = web3._extend.formatters.outputAddressFormatter(sa.unit.address);					
 					}
 					if(sa.unit.redeemInfo !== null) {
 						for (var j = 0; j < sa.unit.redeemInfo.length; j++) {
@@ -801,6 +808,7 @@ web3._extend({
 							for (var j = 0; j < sa.delegation[m].unit.value.length; j++) {
 								sa.delegation[m].unit.value[j].amount = web3._extend.utils.toBigNumber(sa.delegation[m].unit.value[j].amount);
 								sa.delegation[m].unit.value[j].height = web3._extend.utils.toBigNumber(sa.delegation[m].unit.value[j].height);
+								sa.delegation[m].unit.address = web3._extend.formatters.outputAddressFormatter(sa.delegation[m].unit.address);
 							}						
 						}
 						if(sa.delegation[m].unit.redeemInfo !== null) {
