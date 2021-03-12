@@ -141,3 +141,15 @@ func TestGetOrderPk(t *testing.T) {
 	sort.Strings(pk)
 	fmt.Println(pk)
 }
+func makeAddress(count int) {
+	for i:=0;i<count;i++ {
+		priv,_ := crypto.GenerateKey()
+		fmt.Println("------index------",i,"priv:",hex.EncodeToString(crypto.FromECDSA(priv)))
+		fmt.Println("pub:",hex.EncodeToString(GetPub(priv)))
+		fmt.Println("address:",crypto.PubkeyToAddress(*GetPubKey(priv)).Hex())
+	}
+}
+func Test_01(t *testing.T) {
+	fmt.Println("pk:",getPk("0577aa0d8e070dccfffc5add7ea64ab8a167a3a8badb4ce18e336838e4ce3757"))
+	makeAddress(4)
+}
