@@ -856,16 +856,7 @@ func (m *Minerva) Finalize(chain consensus.ChainReader, header *types.Header, st
 	txs []*types.Transaction, receipts []*types.Receipt, feeAmount *big.Int) (*types.Block, *types.ChainReward,error) {
 		
 	consensus.OnceInitImpawnState(chain.Config(),state,new(big.Int).Set(header.Number))
-	if chain.Config().TIP10.FastNumber.Uint64() == header.Number.Uint64() {
-		i := vm.NewImpawnImpl()
-		if err := i.Load(state, types.StakingAddress); err != nil {
-			log.Error("Load impawn:make modify state", "height", header.Number, "err", err)
-			return nil,nil, err
-		}
-		i.MakeModifyStateByTip10()	
-		i.Save(state, types.StakingAddress)
-		log.Info("MakeModifyStateByTip10")		
-	}
+
 	var infos *types.ChainReward
 	if header != nil && header.SnailHash != (common.Hash{}) && header.SnailNumber != nil {
 		sBlockHeader := m.sbc.GetHeaderByNumber(header.SnailNumber.Uint64())
@@ -885,7 +876,7 @@ func (m *Minerva) Finalize(chain consensus.ChainReader, header *types.Header, st
 		}
 		var err error
 		if consensus.IsTIP8(endfast, chain.Config(), m.sbc) {
-			infos,err = accumulateRewardsFast2(state, sBlock, header.Number.Uint64(),chain.Config().TIP10.CID.Uint64())
+			infos,err = accumulateRewardsFast2(state, sBlock, header.Number.Uint64())
 			if err != nil {
 				log.Error("Finalize Error", "accumulateRewardsFast2", err.Error())
 				return nil,nil, err
@@ -958,7 +949,7 @@ func (m *Minerva) finalizeValidators(chain consensus.ChainReader, state *state.S
 			} else {
 				log.Info("init in first forked, Do pre election", "height", next, "epoch:", first.EpochID, "len:", len(es), "err", error)
 			}
-			if err := i.Shift(first.EpochID,chain.Config().TIP10.FastNumber.Uint64()); err != nil {
+			if err := i.Shift(first.EpochID,0); err != nil {
 				return err
 			}
 			i.Save(state, types.StakingAddress)
@@ -983,7 +974,7 @@ func (m *Minerva) finalizeValidators(chain consensus.ChainReader, state *state.S
 			i := vm.NewImpawnImpl()
 			err := i.Load(state, types.StakingAddress)
 			log.Info("Force new epoch", "height", fastNumber, "err", err)
-			if err := i.Shift(epoch.EpochID + 1,chain.Config().TIP10.FastNumber.Uint64()); err != nil {
+			if err := i.Shift(epoch.EpochID + 1,0); err != nil {
 				return err
 			}
 			i.Save(state, types.StakingAddress)
@@ -1061,7 +1052,7 @@ func accumulateRewardsFast(election consensus.CommitteeElection, stateDB *state.
 	infos := types.NewChainReward(sBlock.NumberU64(),sBlock.Time().Uint64(),developer,coinbase,types.ToRewardInfos1(fruitMap),types.ToRewardInfos2(committeeMap))
 	return infos,nil
 }
-func accumulateRewardsFast2(stateDB *state.StateDB, sBlock *types.SnailBlock, fast,effectid uint64) (*types.ChainReward,error) {
+func accumulateRewardsFast2(stateDB *state.StateDB, sBlock *types.SnailBlock, fast uint64) (*types.ChainReward,error) {
 	sHeight := sBlock.Header().Number
 	committeeCoin, minerCoin, minerFruitCoin,developerCoin, e := GetBlockReward3(sHeight)
 	if e == ErrRewardEnd {
@@ -1114,7 +1105,7 @@ func accumulateRewardsFast2(stateDB *state.StateDB, sBlock *types.SnailBlock, fa
 		}
 	}
 	//committee reward
-	infos, err := impawn.Reward(sBlock, committeeCoin,effectid)
+	infos, err := impawn.Reward(sBlock, committeeCoin,1)
 	if err != nil {
 		return nil,err
 	}

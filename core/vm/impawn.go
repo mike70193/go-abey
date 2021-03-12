@@ -798,11 +798,9 @@ func (i *ImpawnImpl) calcReward(target,effectid uint64, allAmount *big.Int, einf
 		if sas == nil {
 			return nil, errors.New(fmt.Sprint(types.ErrMatchEpochID, "epochid:", einfo.EpochID))
 		}
-		if einfo.EpochID >= effectid {
-			sas = i.fetchAccountsInEpoch(einfo.EpochID,sas)
-			if len(sas) == 0 {
-				return nil, errors.New(fmt.Sprint(types.ErrMatchEpochID, "epochid:", einfo.EpochID,"sas=0"))
-			}
+		sas = i.fetchAccountsInEpoch(einfo.EpochID,sas)
+		if len(sas) == 0 {
+			return nil, errors.New(fmt.Sprint(types.ErrMatchEpochID, "epochid:", einfo.EpochID,"sas=0"))
 		}
 		impawns := SAImpawns(sas)
 		impawns.sort(target, false)
@@ -851,18 +849,10 @@ func (i *ImpawnImpl) reward(begin, end,effectid uint64, allAmount *big.Int) ([]*
 		if items, err := i.calcReward(ids[0].EndHeight,effectid, amount1, ids[0]); err != nil {
 			return nil, err
 		} else {
-			if ids[1].EpochID >= effectid {
-				if items1, err2 := i.calcReward(end,effectid, amount2, ids[1]); err2 != nil {
-					return nil, err2
-				} else {
-					items = append(items, items1[:]...)
-				}
+			if items1, err2 := i.calcReward(end,effectid, amount2, ids[1]); err2 != nil {
+				return nil, err2
 			} else {
-				if items1, err2 := i.calcReward(ids[1].EndHeight,effectid, amount2, ids[1]); err2 != nil {
-					return nil, err2
-				} else {
-					items = append(items, items1[:]...)
-				}
+				items = append(items, items1[:]...)
 			}
 			return items, nil
 		}

@@ -44,14 +44,15 @@ type (
 
 func (evm *EVM) precompile(addr common.Address) (PrecompiledContract, bool) {
 	var precompiles map[common.Address]PrecompiledContract
-	switch {
-	case evm.chainRules.IsTIP7:
-		precompiles = PrecompiledContractsPoS
-	case evm.chainRules.IsTIP11:
-		precompiles = PrecompiledContractsYoloPos
-	default:
-		precompiles = PrecompiledContractsByzantium
-	}
+	precompiles = PrecompiledContractsYoloPos
+	//switch {
+	//case evm.chainRules.IsTIP7:
+	//	precompiles = PrecompiledContractsPoS
+	//case evm.chainRules.IsTIP11:
+	//	precompiles = PrecompiledContractsYoloPos
+	//default:
+	//	precompiles = PrecompiledContractsByzantium
+	//}
 	p, ok := precompiles[addr]
 	return p, ok
 }

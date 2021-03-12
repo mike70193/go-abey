@@ -71,7 +71,6 @@ func newTestBackend(t *testing.T) *testBackend {
 	gspec.Config.TIP7 = &params.BlockConfig{FastNumber: big.NewInt(10000)}
 	gspec.Config.TIP8 = &params.BlockConfig{FastNumber: big.NewInt(1000), CID: big.NewInt(10)}
 	gspec.Config.TIP9 = &params.BlockConfig{SnailNumber: big.NewInt(1000)}
-	gspec.Config.TIP10 = &params.BlockConfig{FastNumber: big.NewInt(1000)}
 
 	engine := ethash.NewFaker()
 	db := abeydb.NewMemDatabase()

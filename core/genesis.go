@@ -265,7 +265,7 @@ func (g *Genesis) ToFastBlock(db abeydb.Database) *types.Block {
 			hh = hh - 1
 		}
 		for _, member := range g.Committee {
-			err := impl.InsertSAccount2(hh, g.Config.TIP10.FastNumber.Uint64(), member.Coinbase, member.Publickey, params.ElectionMinLimitForStaking, big.NewInt(100), true)
+			err := impl.InsertSAccount2(hh, 0, member.Coinbase, member.Publickey, params.ElectionMinLimitForStaking, big.NewInt(100), true)
 			if err != nil {
 				log.Error("ToFastBlock InsertSAccount", "error", err)
 			}
@@ -275,7 +275,7 @@ func (g *Genesis) ToFastBlock(db abeydb.Database) *types.Block {
 		if err != nil {
 			log.Error("ToFastBlock DoElections", "error", err)
 		}
-		err = impl.Shift(1, g.Config.TIP10.FastNumber.Uint64())
+		err = impl.Shift(1, 0)
 		if err != nil {
 			log.Error("ToFastBlock Shift", "error", err)
 		}

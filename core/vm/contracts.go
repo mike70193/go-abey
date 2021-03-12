@@ -965,12 +965,7 @@ func (c *staking) RequiredGas(evm *EVM, input []byte) uint64 {
 		method  *abi.Method
 		err     error
 	)
-
-	if evm.chainConfig.IsTIP10(evm.Context.BlockNumber) {
-		method, err = abiStaking.MethodById(input)
-	} else {
-		method, err = abiPre10.MethodById(input)
-	}
+	method, err = abiStaking.MethodById(input)
 
 	if err != nil {
 		return baseGas

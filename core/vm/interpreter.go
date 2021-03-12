@@ -97,13 +97,13 @@ func NewEVMInterpreter(evm *EVM, cfg Config) *EVMInterpreter {
 	// the jump table was initialised. If it was not
 	// we'll set the default jump table.
 	if cfg.JumpTable[STOP] == nil {
-		var jt JumpTable
-		switch {
-		case evm.chainRules.IsTIP11:
-			jt = yoloV1InstructionSet
-		default:
-			jt = constantinopleInstructionSet
-		}
+		var jt JumpTable = yoloV1InstructionSet
+		// switch {
+		// case evm.chainRules.IsTIP11:
+		// 	jt = yoloV1InstructionSet
+		// default:
+		// 	jt = constantinopleInstructionSet
+		// }
 		for i, eip := range cfg.ExtraEips {
 			if err := EnableEIP(eip, &jt); err != nil {
 				// Disable it, so caller can check if it's activated or not
