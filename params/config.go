@@ -30,13 +30,13 @@ import (
 
 // Genesis hashes to enforce below configs on.
 var (
-	MainnetGenesisHash      = common.HexToHash("0x0c6e644fcbd396f7b235ecef44551c45afd9274e87cd77ec6e9778cf8bfb46fc")
-	MainnetSnailGenesisHash = common.HexToHash("0xf82fd9c0c8a53474c9e40e4f1c0583a94609eaf88dae01a5496da459398485c6")
+	MainnetGenesisHash      = common.HexToHash("0x6042d99f4d5f7dce050b0b56a2bbfa16272834f0374c5f863190177836ef1139")
+	MainnetSnailGenesisHash = common.HexToHash("0xa8e3aa3eedb4a8264773ee5f68ba90c5b260f8e0baa0f78a5cebb594a3d6dc81")
 
-	TestnetGenesisHash      = common.HexToHash("0x4b82a68ebbf32f2e816754f2b50eda0ae2c0a71dd5f4e0ecd93ccbfb7dba00b8")
-	TestnetSnailGenesisHash = common.HexToHash("0x4ab1748c057b744de202d6ebea64e8d3a0b2ec4c19abbc59e8639967b14b7c96")
+	TestnetGenesisHash      = common.HexToHash("0xac72a2eba81989679eb3a47eab4337c4950f6f539ea0e78d94ad23424ebd8760")
+	TestnetSnailGenesisHash = common.HexToHash("0x4da60af319dd178c440c33f230f54b9c2537b9ff43d0ac051bc503ee773f223b")
 
-	DevnetSnailGenesisHash = common.HexToHash("0xdf819f11beead767f91a6c05d74e5f902fc2988e9039a969a023bc75e467cdeb")
+	DevnetSnailGenesisHash = common.HexToHash("0xfd5f70dd4b70763c0fe9d5238d6ce1c5e86712813775fe6b1654ce0f8129587f")
 )
 
 // TrustedCheckpoints associates each known checkpoint with the genesis hash of
@@ -56,11 +56,11 @@ var (
 			MinimumFruitDifficulty: big.NewInt(262144),
 			DurationLimit:          big.NewInt(600),
 		}),
-		TIP3:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP5:  &BlockConfig{SnailNumber: big.NewInt(0)},
-		TIP7:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP8:  &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
-		TIP9:  &BlockConfig{SnailNumber: big.NewInt(47000)},
+		TIP3: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP5: &BlockConfig{SnailNumber: big.NewInt(0)},
+		TIP7: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
+		TIP9: &BlockConfig{SnailNumber: big.NewInt(47000)},
 	}
 
 	// MainnetTrustedCheckpoint contains the light client trusted checkpoint for the main network.
@@ -92,11 +92,11 @@ var (
 			MinimumFruitDifficulty: big.NewInt(200),
 			DurationLimit:          big.NewInt(600),
 		}),
-		TIP3:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP5:  &BlockConfig{SnailNumber: big.NewInt(0)},
-		TIP7:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP8:  &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
-		TIP9:  &BlockConfig{SnailNumber: big.NewInt(38648)},
+		TIP3: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP5: &BlockConfig{SnailNumber: big.NewInt(0)},
+		TIP7: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
+		TIP9: &BlockConfig{SnailNumber: big.NewInt(38648)},
 	}
 
 	// TestnetTrustedCheckpoint contains the light client trusted checkpoint for the Ropsten test network.
@@ -128,11 +128,11 @@ var (
 			MinimumFruitDifficulty: big.NewInt(100),
 			DurationLimit:          big.NewInt(150),
 		}),
-		TIP3:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP5:  &BlockConfig{SnailNumber: big.NewInt(0)},
-		TIP7:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP8:  &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
-		TIP9:  &BlockConfig{SnailNumber: big.NewInt(20)},
+		TIP3: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP5: &BlockConfig{SnailNumber: big.NewInt(0)},
+		TIP7: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
+		TIP9: &BlockConfig{SnailNumber: big.NewInt(20)},
 	}
 
 	SingleNodeChainConfig = &ChainConfig{
@@ -142,11 +142,11 @@ var (
 			MinimumFruitDifficulty: big.NewInt(2),
 			DurationLimit:          big.NewInt(120),
 		}),
-		TIP3:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP5:  &BlockConfig{SnailNumber: big.NewInt(0)},
-		TIP7:  &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP8:  &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(-1)},
-		TIP9:  &BlockConfig{SnailNumber: big.NewInt(20)},
+		TIP3: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP5: &BlockConfig{SnailNumber: big.NewInt(0)},
+		TIP7: &BlockConfig{FastNumber: big.NewInt(0)},
+		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(-1)},
+		TIP9: &BlockConfig{SnailNumber: big.NewInt(20)},
 	}
 
 	// TestnetTrustedCheckpoint contains the light client trusted checkpoint for the Ropsten test network.
@@ -234,10 +234,10 @@ type ChainConfig struct {
 
 	TIP3 *BlockConfig `json:"tip3"`
 
-	TIP5  *BlockConfig `json:"tip5"`
-	TIP7  *BlockConfig `json:"tip7"`
-	TIP8  *BlockConfig `json:"tip8"`
-	TIP9  *BlockConfig `json:"tip9"`
+	TIP5 *BlockConfig `json:"tip5"`
+	TIP7 *BlockConfig `json:"tip7"`
+	TIP8 *BlockConfig `json:"tip8"`
+	TIP9 *BlockConfig `json:"tip9"`
 
 	TIPStake *BlockConfig `json:"tipstake"`
 }
@@ -432,7 +432,7 @@ func (err *ConfigCompatError) Error() string {
 // Rules is a one time interface meaning that it shouldn't be used in between transition
 // phases.
 type Rules struct {
-	ChainID                 *big.Int
+	ChainID        *big.Int
 	IsTIP3, IsTIP7 bool
 }
 

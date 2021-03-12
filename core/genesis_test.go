@@ -18,38 +18,41 @@ package core
 
 //
 import (
+	"bytes"
+	"encoding/hex"
+	"fmt"
+	"github.com/abeychain/go-abey/abeydb"
+	"github.com/abeychain/go-abey/common"
+	"github.com/abeychain/go-abey/consensus"
+	"github.com/abeychain/go-abey/consensus/minerva"
+	"github.com/abeychain/go-abey/core/rawdb"
+	snaildb "github.com/abeychain/go-abey/core/snailchain/rawdb"
+	"github.com/abeychain/go-abey/core/state"
+	"github.com/abeychain/go-abey/core/types"
+	"github.com/abeychain/go-abey/core/vm"
+	"github.com/abeychain/go-abey/crypto"
+	"github.com/abeychain/go-abey/params"
+	"github.com/davecgh/go-spew/spew"
 	"math/big"
 	"reflect"
 	"sort"
 	"testing"
-	"bytes"
-	"fmt"
-	"encoding/hex"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/abeychain/go-abey/common"
-	"github.com/abeychain/go-abey/core/rawdb"
-	"github.com/abeychain/go-abey/core/state"
-	snaildb "github.com/abeychain/go-abey/core/snailchain/rawdb"
-	"github.com/abeychain/go-abey/consensus/minerva"
-	"github.com/abeychain/go-abey/core/types"
-	"github.com/abeychain/go-abey/abeydb"
-	"github.com/abeychain/go-abey/crypto"
-	"github.com/abeychain/go-abey/params"
-	"github.com/abeychain/go-abey/core/vm"
-	"github.com/abeychain/go-abey/consensus"
 )
 
 func TestDefaultGenesisBlock(t *testing.T) {
-	block1 := DefaultDevGenesisBlock().ToFastBlock(nil)
-	if block1.Hash() != params.MainnetGenesisHash {
-		t.Errorf("wrong mainnet genesis hash, got %v, want %v", common.ToHex(block1.Hash().Bytes()), params.MainnetGenesisHash)
-	}
+	//block1 := DefaultDevGenesisBlock().ToFastBlock(nil)
+	//if block1.Hash() != params.MainnetGenesisHash {
+	//	fmt.Println(block1.Hash().Hex())
+	//	t.Errorf("wrong mainnet genesis hash, got %v, want %v", common.ToHex(block1.Hash().Bytes()), params.MainnetGenesisHash)
+	//}
 	block := DefaultGenesisBlock().ToFastBlock(nil)
 	if block.Hash() != params.MainnetGenesisHash {
+		fmt.Println(block.Hash().Hex())
 		t.Errorf("wrong mainnet genesis hash, got %v, want %v", common.ToHex(block.Hash().Bytes()), params.MainnetGenesisHash)
 	}
 	block = DefaultTestnetGenesisBlock().ToFastBlock(nil)
 	if block.Hash() != params.TestnetGenesisHash {
+		fmt.Println(block.Hash().Hex())
 		t.Errorf("wrong testnet genesis hash, got %v, want %v", common.ToHex(block.Hash().Bytes()), params.TestnetGenesisHash)
 	}
 }
@@ -174,10 +177,17 @@ func TestSetupGenesis(t *testing.T) {
 func TestDefaultSnailGenesisBlock(t *testing.T) {
 	block := DefaultGenesisBlock().ToSnailBlock(nil)
 	if block.Hash() != params.MainnetSnailGenesisHash {
+		fmt.Println(block.Hash().Hex())
 		t.Errorf("wrong mainnet genesis hash, got %v, want %v", common.ToHex(block.Hash().Bytes()), params.MainnetSnailGenesisHash)
 	}
 	block = DefaultTestnetGenesisBlock().ToSnailBlock(nil)
 	if block.Hash() != params.TestnetSnailGenesisHash {
+		fmt.Println(block.Hash().Hex())
+		t.Errorf("wrong testnet genesis hash, got %v, want %v", common.ToHex(block.Hash().Bytes()), params.TestnetSnailGenesisHash)
+	}
+	block = DefaultDevGenesisBlock().ToSnailBlock(nil)
+	if block.Hash() != params.DevnetSnailGenesisHash {
+		fmt.Println(block.Hash().Hex())
 		t.Errorf("wrong testnet genesis hash, got %v, want %v", common.ToHex(block.Hash().Bytes()), params.TestnetSnailGenesisHash)
 	}
 }
@@ -296,17 +306,18 @@ func TestSetupSnailGenesis(t *testing.T) {
 		}
 	}
 }
+
 var (
-	root = common.Hash{}
-	key1 = "da5756ffa265ed55dcb741c97e8d3d2f36269df8afcae4b59b0b1f1f8eb58977"
-	addr1 = "0x573baF2a36BFd683F1301db1EeBa1D55fd14De0A"
-	balance1 = new(big.Int).Mul(big.NewInt(1000),big.NewInt(1e18))
-	balance2 = new(big.Int).Mul(big.NewInt(100000),big.NewInt(1e18))
-	balance3 = new(big.Int).Mul(big.NewInt(10),big.NewInt(1e18))
-	gp       = new(GasPool).AddGas(new(big.Int).Mul(big.NewInt(1),big.NewInt(1e18)).Uint64())
-	code = `0x608060405234801561001057600080fd5b506040516020806101758339810180604052810190808051906020019092919050505060006a747275657374616b696e6790508073ffffffffffffffffffffffffffffffffffffffff1663e1254fba836040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050606060405180830381600087803b1580156100de57600080fd5b505af11580156100f2573d6000803e3d6000fd5b505050506040513d606081101561010857600080fd5b8101908080519060200190929190805190602001909291908051906020019092919050505050505050506035806101406000396000f3006080604052600080fd00a165627a7a72305820a76679c2a9c73eeafffe41cfccde51b6b5150b920f6d90f25792987d9ab855c400290000000000000000000000006d348e0188cc2596aaa4046a1d50bb3ba50e8524`
-	gasLimit = uint64(3000000)
-	allReward = new(big.Int).Mul(big.NewInt(100),big.NewInt(1e18))
+	root      = common.Hash{}
+	key1      = "da5756ffa265ed55dcb741c97e8d3d2f36269df8afcae4b59b0b1f1f8eb58977"
+	addr1     = "0x573baF2a36BFd683F1301db1EeBa1D55fd14De0A"
+	balance1  = new(big.Int).Mul(big.NewInt(1000), big.NewInt(1e18))
+	balance2  = new(big.Int).Mul(big.NewInt(100000), big.NewInt(1e18))
+	balance3  = new(big.Int).Mul(big.NewInt(10), big.NewInt(1e18))
+	gp        = new(GasPool).AddGas(new(big.Int).Mul(big.NewInt(1), big.NewInt(1e18)).Uint64())
+	code      = `0x608060405234801561001057600080fd5b506040516020806101758339810180604052810190808051906020019092919050505060006a747275657374616b696e6790508073ffffffffffffffffffffffffffffffffffffffff1663e1254fba836040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050606060405180830381600087803b1580156100de57600080fd5b505af11580156100f2573d6000803e3d6000fd5b505050506040513d606081101561010857600080fd5b8101908080519060200190929190805190602001909291908051906020019092919050505050505050506035806101406000396000f3006080604052600080fd00a165627a7a72305820a76679c2a9c73eeafffe41cfccde51b6b5150b920f6d90f25792987d9ab855c400290000000000000000000000006d348e0188cc2596aaa4046a1d50bb3ba50e8524`
+	gasLimit  = uint64(3000000)
+	allReward = new(big.Int).Mul(big.NewInt(100), big.NewInt(1e18))
 )
 
 func getFisrtState() *state.StateDB {
@@ -321,7 +332,7 @@ func TestTip7(t *testing.T) {
 	fmt.Println("finish")
 }
 func generateAddr() common.Address {
-	priv,_ := crypto.GenerateKey()
+	priv, _ := crypto.GenerateKey()
 	privHex := hex.EncodeToString(crypto.FromECDSA(priv))
 	fmt.Println(privHex)
 	addr := crypto.PubkeyToAddress(priv.PublicKey)
@@ -330,10 +341,10 @@ func generateAddr() common.Address {
 	return addr
 }
 
-func toFirstBlock(statedb *state.StateDB)  {
-	statedb.AddBalance(common.HexToAddress(addr1),balance1)
+func toFirstBlock(statedb *state.StateDB) {
+	statedb.AddBalance(common.HexToAddress(addr1), balance1)
 	config := params.DevnetChainConfig
-	consensus.OnceInitImpawnState(config,statedb,new(big.Int).SetUint64(0))
+	consensus.OnceInitImpawnState(config, statedb, new(big.Int).SetUint64(0))
 	root = statedb.IntermediateRoot(false)
 	statedb.Commit(false)
 	statedb.Database().TrieDB().Commit(root, true)
@@ -342,21 +353,21 @@ func toFirstBlock(statedb *state.StateDB)  {
 	nonce := statedb.GetNonce(addr)
 	codeHash := statedb.GetCodeHash(addr)
 	codeSize := statedb.GetCodeSize(addr)
-	fmt.Println("nonce:",nonce,"codehash:",codeHash,"codesize:",codeSize)
+	fmt.Println("nonce:", nonce, "codehash:", codeHash, "codesize:", codeSize)
 }
 func makeDeployedTx() *types.Transaction {
-	priv1,_ := crypto.HexToECDSA(key1)
-	tx := types.NewContractCreation(0, big.NewInt(0), gasLimit, 
-	new(big.Int).Mul(big.NewInt(10),big.NewInt(1e10)), common.FromHex(code))
+	priv1, _ := crypto.HexToECDSA(key1)
+	tx := types.NewContractCreation(0, big.NewInt(0), gasLimit,
+		new(big.Int).Mul(big.NewInt(10), big.NewInt(1e10)), common.FromHex(code))
 	tx, _ = types.SignTx(tx, types.NewTIP1Signer(big.NewInt(100)), priv1)
 	return tx
 }
 func TestDeployedTx(t *testing.T) {
-	
+
 	var (
-		db      = abeydb.NewMemDatabase()
-		addr1   = common.HexToAddress(addr1)
-		gspec   = &Genesis{
+		db    = abeydb.NewMemDatabase()
+		addr1 = common.HexToAddress(addr1)
+		gspec = &Genesis{
 			Config: params.DevnetChainConfig,
 			Alloc:  types.GenesisAlloc{addr1: {Balance: balance1}},
 		}
@@ -389,17 +400,19 @@ func TestDeployedTx(t *testing.T) {
 	fmt.Println("balance of addr1:", state.GetBalance(addr1))
 	fmt.Println("finish")
 }
+
 type da struct {
-	address 	common.Address
-	amount 		*big.Int
-	reward 		*big.Int
+	address common.Address
+	amount  *big.Int
+	reward  *big.Int
 }
 type daByAmount []*da
+
 func (vs daByAmount) Len() int {
 	return len(vs)
 }
 func (vs daByAmount) Less(i, j int) bool {
-	return vs[i].amount.Cmp(vs[j].amount) < 0 
+	return vs[i].amount.Cmp(vs[j].amount) < 0
 }
 func (vs daByAmount) Swap(i, j int) {
 	it := vs[i]
@@ -408,18 +421,18 @@ func (vs daByAmount) Swap(i, j int) {
 }
 
 type sa struct {
-	address 	common.Address
-	fee 		*big.Int
-	amount 		*big.Int
-	reward 		*big.Int
-	das 		[]*da
-	pk 			[]byte
+	address common.Address
+	fee     *big.Int
+	amount  *big.Int
+	reward  *big.Int
+	das     []*da
+	pk      []byte
 }
 
 func (s *sa) getAllAmount() *big.Int {
 	amount := new(big.Int).Set(s.amount)
-	for _,v := range s.das {
-		amount = amount.Add(amount,v.amount)
+	for _, v := range s.das {
+		amount = amount.Add(amount, v.amount)
 	}
 	return amount
 }
@@ -428,11 +441,12 @@ func (s *sa) getAmount() *big.Int {
 }
 
 type saByAmount []*sa
+
 func (vs saByAmount) Len() int {
 	return len(vs)
 }
 func (vs saByAmount) Less(i, j int) bool {
-	return vs[i].getAllAmount().Cmp(vs[j].getAllAmount()) < 0 
+	return vs[i].getAllAmount().Cmp(vs[j].getAllAmount()) < 0
 }
 func (vs saByAmount) Swap(i, j int) {
 	it := vs[i]
@@ -441,13 +455,13 @@ func (vs saByAmount) Swap(i, j int) {
 }
 func (vs saByAmount) getAllAmount() *big.Int {
 	amount := big.NewInt(0)
-	for _,v := range vs {
-		amount = amount.Add(amount,v.getAllAmount())
+	for _, v := range vs {
+		amount = amount.Add(amount, v.getAllAmount())
 	}
 	return amount
 }
 func generatePK() []byte {
-	key0,_ := crypto.GenerateKey()
+	key0, _ := crypto.GenerateKey()
 	pk := crypto.FromECDSAPub(&key0.PublicKey)
 	return pk
 }
@@ -457,73 +471,73 @@ func TestReward(t *testing.T) {
 	params.DposForkPoint = want
 
 	var (
-		accounts = []*sa {
+		accounts = []*sa{
 			&sa{
-				address:	generateAddr(),
-				fee:		big.NewInt(50),
-				amount:		balance2,
-				reward:		big.NewInt(0),
-				pk:			generatePK(),
-				das:		[]*da{
+				address: generateAddr(),
+				fee:     big.NewInt(50),
+				amount:  balance2,
+				reward:  big.NewInt(0),
+				pk:      generatePK(),
+				das: []*da{
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 				},
 			},
 			&sa{
-				address:	generateAddr(),
-				fee:		big.NewInt(20),
-				amount:		balance2,
-				reward:		big.NewInt(0),
-				pk:			generatePK(),
-				das:		[]*da{
+				address: generateAddr(),
+				fee:     big.NewInt(20),
+				amount:  balance2,
+				reward:  big.NewInt(0),
+				pk:      generatePK(),
+				das: []*da{
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 				},
 			},
 		}
 	)
 	calcReward(accounts)
-	
+
 	impl := vm.NewImpawnImpl()
-	for _,val := range accounts {
-		impl.InsertSAccount2(want,0, val.address, val.pk, val.amount, val.fee, true)
-		for _,val2 := range val.das {
+	for _, val := range accounts {
+		impl.InsertSAccount2(want, 0, val.address, val.pk, val.amount, val.fee, true)
+		for _, val2 := range val.das {
 			impl.InsertDAccount2(want, val.address, val2.address, val2.amount)
 		}
 	}
-	
+
 	_, err := impl.DoElections(1, want)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	rinfo, _ := impl.Reward2(0,want,1, allReward)
-	
-	for i,v := range accounts {
-		wReward := getReward(v.address,rinfo)
+	rinfo, _ := impl.Reward2(0, want, 1, allReward)
+
+	for i, v := range accounts {
+		wReward := getReward(v.address, rinfo)
 		if wReward.Sign() > 0 && wReward.Cmp(v.reward) != 0 {
-			fmt.Println("i:",i,"sa reward not match","req:",v.reward,"res:",wReward)
+			fmt.Println("i:", i, "sa reward not match", "req:", v.reward, "res:", wReward)
 		}
-		for ii,vv := range v.das {
-			wReward2 := getReward(vv.address,rinfo)
+		for ii, vv := range v.das {
+			wReward2 := getReward(vv.address, rinfo)
 			if wReward2.Sign() > 0 && wReward2.Cmp(vv.reward) != 0 {
-				fmt.Println("i:",i,"j",ii,"da reward not match","req:",vv.reward,"res:",wReward2)
+				fmt.Println("i:", i, "j", ii, "da reward not match", "req:", vv.reward, "res:", wReward2)
 			}
 		}
 	}
@@ -531,21 +545,21 @@ func TestReward(t *testing.T) {
 	fmt.Println("finish")
 }
 func calcReward(accounts []*sa) {
-	sas := make([]*sa,0,0)
-	for _,v := range accounts {
+	sas := make([]*sa, 0, 0)
+	for _, v := range accounts {
 		if params.ElectionMinLimitForStaking.Cmp(v.getAmount()) <= 0 {
-			sas = append(sas,v)
+			sas = append(sas, v)
 		}
 	}
-	calcReward2(sas,allReward)
+	calcReward2(sas, allReward)
 }
-func calcReward2(accounts []*sa,allReward *big.Int) {
+func calcReward2(accounts []*sa, allReward *big.Int) {
 	sort.Sort(saByAmount(accounts))
 	allStaking := saByAmount(accounts).getAllAmount()
 	sum := len(accounts)
 	left := big.NewInt(0)
 
-	for i,v := range accounts {
+	for i, v := range accounts {
 		saAllStaking := v.getAllAmount()
 		if saAllStaking.Sign() <= 0 {
 			continue
@@ -560,7 +574,7 @@ func calcReward2(accounts []*sa,allReward *big.Int) {
 		calcRewardInSa(v, v2)
 	}
 }
-func calcRewardInSa(aa *sa,allReward *big.Int) {
+func calcRewardInSa(aa *sa, allReward *big.Int) {
 	allStaking := aa.getAllAmount()
 	fee := new(big.Int).Quo(new(big.Int).Mul(allReward, aa.fee), types.Base)
 	all, left := new(big.Int).Sub(allReward, fee), big.NewInt(0)
@@ -577,10 +591,10 @@ func calcRewardInSa(aa *sa,allReward *big.Int) {
 	}
 	aa.reward = new(big.Int).Add(new(big.Int).Sub(all, left), fee)
 }
-func getReward(addr common.Address,infos []*types.SARewardInfos) *big.Int {
+func getReward(addr common.Address, infos []*types.SARewardInfos) *big.Int {
 	reward := big.NewInt(0)
-	for _,v := range infos {
-		for _,vv := range v.Items {
+	for _, v := range infos {
+		for _, vv := range v.Items {
 			if bytes.Equal(vv.Address.Bytes(), addr.Bytes()) {
 				return vv.Amount
 			}
@@ -597,59 +611,59 @@ func TestRedeem(t *testing.T) {
 	params.DposForkPoint = want
 
 	var (
-		accounts = []*sa {
+		accounts = []*sa{
 			&sa{
-				address:	generateAddr(),
-				fee:		big.NewInt(50),
-				amount:		balance2,
-				reward:		big.NewInt(0),
-				pk:			generatePK(),
-				das:		[]*da{
+				address: generateAddr(),
+				fee:     big.NewInt(50),
+				amount:  balance2,
+				reward:  big.NewInt(0),
+				pk:      generatePK(),
+				das: []*da{
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 				},
 			},
 			&sa{
-				address:	generateAddr(),
-				fee:		big.NewInt(20),
-				amount:		balance2,
-				reward:		big.NewInt(0),
-				pk:			generatePK(),
-				das:		[]*da{
+				address: generateAddr(),
+				fee:     big.NewInt(20),
+				amount:  balance2,
+				reward:  big.NewInt(0),
+				pk:      generatePK(),
+				das: []*da{
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 					&da{
-						address:	generateAddr(),
-						amount:		balance1,
-						reward:		big.NewInt(0),
+						address: generateAddr(),
+						amount:  balance1,
+						reward:  big.NewInt(0),
 					},
 				},
 			},
 		}
 	)
-	
+
 	impl := vm.NewImpawnImpl()
-	for _,val := range accounts {
-		impl.InsertSAccount2(want-5,0, val.address, val.pk, val.amount, val.fee, true)
-		for _,val2 := range val.das {
+	for _, val := range accounts {
+		impl.InsertSAccount2(want-5, 0, val.address, val.pk, val.amount, val.fee, true)
+		for _, val2 := range val.das {
 			impl.InsertDAccount2(want-5, val.address, val2.address, val2.amount)
 		}
 	}
-	
-	for i,val := range accounts {
-		if i % 2 == 0 {
-			impl.AppendSAAmount(want-2,val.address,balance2)
+
+	for i, val := range accounts {
+		if i%2 == 0 {
+			impl.AppendSAAmount(want-2, val.address, balance2)
 		}
 	}
 
@@ -658,67 +672,67 @@ func TestRedeem(t *testing.T) {
 		fmt.Println(err)
 	}
 
-	if err := impl.Shift(1,0); err != nil  {
-		fmt.Println("shift error:",err)
+	if err := impl.Shift(1, 0); err != nil {
+		fmt.Println("shift error:", err)
 	}
-	
-	for i,val := range accounts {
-		if i % 2 == 0 {
-			impl.CancelSAccount(want+2,val.address,balance3)
-			for j,val2 := range val.das {
-				if j % 2 == 0 {
+
+	for i, val := range accounts {
+		if i%2 == 0 {
+			impl.CancelSAccount(want+2, val.address, balance3)
+			for j, val2 := range val.das {
+				if j%2 == 0 {
 					impl.CancelDAccount(want+2, val.address, val2.address, balance3)
 				}
 			}
 		}
 	}
 
-	for i,aa := range accounts {
-		fmt.Println("i",i,"display staking..........")
+	for i, aa := range accounts {
+		fmt.Println("i", i, "display staking..........")
 		res1 := impl.GetStakingAsset(aa.address)
-		displayStakingAsset(res1,false)
-		res2 := impl.GetLockedAsset2(aa.address,uint64(1000))
-		displayLockedAsset(res2,uint64(1000))
-		for j,vv := range aa.das {
-			fmt.Println("i",i,"j",j,"display delegation..........")
+		displayStakingAsset(res1, false)
+		res2 := impl.GetLockedAsset2(aa.address, uint64(1000))
+		displayLockedAsset(res2, uint64(1000))
+		for j, vv := range aa.das {
+			fmt.Println("i", i, "j", j, "display delegation..........")
 			res3 := impl.GetStakingAsset(vv.address)
-			displayStakingAsset(res3,false)
-			res4 := impl.GetLockedAsset2(aa.address,uint64(1000))
-			displayLockedAsset(res4,uint64(1000))
+			displayStakingAsset(res3, false)
+			res4 := impl.GetLockedAsset2(aa.address, uint64(1000))
+			displayLockedAsset(res4, uint64(1000))
 		}
 	}
 
 	fmt.Println("finish")
 }
 
-func displayStakingAsset(infos map[common.Address]*types.StakingValue,lock bool) {
-	for k,v := range infos {
-		fmt.Println("address:",k.String(),"staking amount info.................")
-		for kk,vv := range v.Value {
+func displayStakingAsset(infos map[common.Address]*types.StakingValue, lock bool) {
+	for k, v := range infos {
+		fmt.Println("address:", k.String(), "staking amount info.................")
+		for kk, vv := range v.Value {
 			if !lock {
-				fmt.Println("staking value:","height:",kk,"value:",vv)
+				fmt.Println("staking value:", "height:", kk, "value:", vv)
 			} else {
-				fmt.Println("locked value:","epochid:",kk,"value:",vv)
+				fmt.Println("locked value:", "epochid:", kk, "value:", vv)
 			}
 		}
-		fmt.Println("address:",k.String(),"staking amount info.................")
+		fmt.Println("address:", k.String(), "staking amount info.................")
 	}
 }
-func displayLockedAsset(infos map[common.Address]*types.LockedValue,height uint64) {
-	for k,v := range infos {
-		fmt.Println("address:",k.String(),"staking amount in locked info.................")
-		for kk,vv := range v.Value {
+func displayLockedAsset(infos map[common.Address]*types.LockedValue, height uint64) {
+	for k, v := range infos {
+		fmt.Println("address:", k.String(), "staking amount in locked info.................")
+		for kk, vv := range v.Value {
 			if vv.Locked {
 				e := types.GetEpochFromID(kk + 1)
-				last := e.BeginHeight+params.MaxRedeemHeight - height
+				last := e.BeginHeight + params.MaxRedeemHeight - height
 				last = last * 5
-				tt := new(big.Float).Quo(big.NewFloat(float64(last)),big.NewFloat(float64(86400)))
-				fmt.Println("locked value:","epochid:",kk,"value:",vv.Amount,"locked time:",
-				tt.Text('f',6),"days")
+				tt := new(big.Float).Quo(big.NewFloat(float64(last)), big.NewFloat(float64(86400)))
+				fmt.Println("locked value:", "epochid:", kk, "value:", vv.Amount, "locked time:",
+					tt.Text('f', 6), "days")
 				continue
 			}
-			fmt.Println("locked value:","epochid:",kk,"value:",vv.Amount,"locked:",vv.Locked)
+			fmt.Println("locked value:", "epochid:", kk, "value:", vv.Amount, "locked:", vv.Locked)
 		}
-		fmt.Println("address:",k.String(),"staking amount in locked info.................")
+		fmt.Println("address:", k.String(), "staking amount in locked info.................")
 	}
 }
