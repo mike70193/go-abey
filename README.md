@@ -84,7 +84,7 @@ $ gabey --your-favourite-flags dumpconfig
 ```
 
 
-### Running on the AbeyChain singlenode(private) network
+### Running on the ABEY Chain singlenode(private) network
 
 To start a g
 instance for single node,  run it with these flags:
