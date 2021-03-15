@@ -67,8 +67,8 @@ const (
 type CommitteeMembers []*CommitteeMember
 
 type CommitteeMember struct {
-	Coinbase      common.Address
-	CommitteeBase common.Address
+	Coinbase      common.Address		`json:"coinbase`
+	CommitteeBase common.Address		`json:"committeebase`
 	Publickey     []byte
 	Flag          uint32
 	MType         uint32

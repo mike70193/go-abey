@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"github.com/abeychain/go-abey/abeydb"
 	"github.com/abeychain/go-abey/common"
+	"github.com/abeychain/go-abey/common/base58"
 	"github.com/abeychain/go-abey/consensus"
 	"github.com/abeychain/go-abey/consensus/minerva"
 	"github.com/abeychain/go-abey/core/rawdb"
@@ -604,6 +605,14 @@ func getReward(addr common.Address, infos []*types.SARewardInfos) *big.Int {
 }
 func Test1(t *testing.T) {
 	fmt.Println(generateAddr())
+	fmt.Println("finish")
+}
+func Test02(t *testing.T) {
+	str := "0000000000000000000000000000000000000000"
+	if bdata,err := hex.DecodeString(str); err == nil {
+		str2 := base58.Encode(bdata[:])
+		fmt.Println(str2)
+	}
 	fmt.Println("finish")
 }
 func TestRedeem(t *testing.T) {

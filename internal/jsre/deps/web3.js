@@ -4047,6 +4047,14 @@ require = (function e(t, n, r) {
             }
             return result;
         };
+        var outputMembersFormatter = function (member) {
+
+            var address = utils.base58Encode(utils.strToBytes(member.coinbase));
+            member.coinbase = "abey" + address;
+            address = utils.base58Encode(utils.strToBytes(member.committeeBase));
+            member.committeeBase = "abey" + address;
+            return member;
+        };
 
         /**
          * Formats the output of a block to its proper values
@@ -4068,12 +4076,20 @@ require = (function e(t, n, r) {
 
             block.difficulty = utils.toBigNumber(block.difficulty);
             // block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
+            block.title = "*test*";
 
             if (utils.isArray(block.transactions)) {
                 block.transactions.forEach(function (item) {
                     if (!utils.isString(item))
                         return outputTransactionFormatter(item);
                 });
+            }
+            if (utils.isArray(block.switchInfos)) {
+                block.switchInfos.forEach(
+                    function (item) {
+                        if (item != null)
+                            return outputMembersFormatter(item);
+                    });
             }
 
             return block;
@@ -4273,6 +4289,7 @@ require = (function e(t, n, r) {
             outputTransactionFormatter: outputTransactionFormatter,
             outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
             outputCoinbaseFormatter: outputCoinbaseFormatter,
+            outputMembersFormatter: outputMembersFormatter,
             outputBlockFormatter: outputBlockFormatter,
             outputSnailFormatter: outputSnailFormatter,
             outputLogFormatter: outputLogFormatter,
