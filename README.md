@@ -1,16 +1,16 @@
-## Abeychain Engineering Code
+## ABEY chain Engineering Code
 
-Abeychain is a truly fast, permissionless, secure and scalable public blockchain platform 
+ABEY chain is a truly fast, permissionless, secure and scalable public blockchain platform 
 which is supported by hybrid consensus technology called Minerva and a global developer community. 
  
-Abeychain uses hybrid consensus combining PBFT and fPoW to solve the biggest problem confronting public blockchain: 
+ABEY chain uses hybrid consensus combining PBFT and fPoW to solve the biggest problem confronting public blockchain: 
 the contradiction between decentralization and efficiency. 
 
-Abeychain uses PBFT as fast-chain to process transactions, and leave the oversight and election of PBFT to the hands of PoW nodes. 
+ABEY chain uses PBFT as fast-chain to process transactions, and leave the oversight and election of PBFT to the hands of PoW nodes. 
 Besides, Abeychain integrates fruitchain technology into the traditional PoW protocol to become fPoW, 
 to make the chain even more decentralized and fair. 
  
-Abeychain also creates a hybrid consensus incentive model and a stable gas fee mechanism to lower the cost for the developers 
+ABEY chain also creates a hybrid consensus incentive model and a stable gas fee mechanism to lower the cost for the developers 
 and operators of DApps, and provide better infrastructure for decentralized eco-system. 
 
 <a href="https://github.com/abeychain/go-abey/blob/master/COPYING"><img src="https://img.shields.io/badge/license-GPL%20%20Abeychain-lightgrey.svg"></a>
@@ -52,7 +52,7 @@ This command will:
    with `gabey attach`.
 
 
-### Running on the AbeyChain test network
+### Running on the ABEY Chain test network
 
 To test your contracts, you can join the test network with your node.
 
@@ -66,7 +66,7 @@ testnet too. Please see above for their explanations if you've skipped here.
 Specifying the `--testnet` flag, however, will reconfigure your Geth instance a bit:
 
  * Test network uses different network ID `18928`
- * Instead of connecting the main Abeychain network, the client will connect to the test network, which uses testnet P2P bootnodes,  and genesis states.
+ * Instead of connecting the main ABEY chain network, the client will connect to the test network, which uses testnet P2P bootnodes,  and genesis states.
 
 
 ### Configuration
@@ -86,7 +86,8 @@ $ gabey --your-favourite-flags dumpconfig
 
 ### Running on the AbeyChain singlenode(private) network
 
-To start a gabey instance for single node,  run it with these flags:
+To start a g
+instance for single node,  run it with these flags:
 
 ```
 $ gabey --singlenode  console
