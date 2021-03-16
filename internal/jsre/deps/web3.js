@@ -4053,6 +4053,7 @@ require = (function e(t, n, r) {
             member.coinbase = "abey" + address;
             address = utils.base58Encode(utils.strToBytes(member.committeeBase));
             member.committeeBase = "abey" + address;
+            member.publickey = utils.toHex(member.publickey);
             return member;
         };
 
@@ -4076,7 +4077,6 @@ require = (function e(t, n, r) {
 
             block.difficulty = utils.toBigNumber(block.difficulty);
             // block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
-            block.title = "*test*";
 
             if (utils.isArray(block.transactions)) {
                 block.transactions.forEach(function (item) {
