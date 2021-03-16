@@ -50,7 +50,7 @@ var TrustedCheckpoints = map[common.Hash]*TrustedCheckpoint{
 var (
 	// MainnetChainConfig is the chain parameters to run a node on the main network.
 	MainnetChainConfig = &ChainConfig{
-		ChainID: big.NewInt(23330),
+		ChainID: big.NewInt(179),
 		Minerva: &(MinervaConfig{
 			MinimumDifficulty:      big.NewInt(134217728),
 			MinimumFruitDifficulty: big.NewInt(262144),
@@ -86,7 +86,7 @@ var (
 
 	// TestnetChainConfig contains the chain parameters to run a node on the Ropsten test network.
 	TestnetChainConfig = &ChainConfig{
-		ChainID: big.NewInt(17800),
+		ChainID: big.NewInt(178),
 		Minerva: &(MinervaConfig{
 			MinimumDifficulty:      big.NewInt(60000),
 			MinimumFruitDifficulty: big.NewInt(200),
@@ -122,7 +122,7 @@ var (
 
 	// DevnetChainConfig contains the chain parameters to run a node on the Ropsten test network.
 	DevnetChainConfig = &ChainConfig{
-		ChainID: big.NewInt(200),
+		ChainID: big.NewInt(177),
 		Minerva: &(MinervaConfig{
 			MinimumDifficulty:      big.NewInt(10000),
 			MinimumFruitDifficulty: big.NewInt(100),
@@ -136,7 +136,7 @@ var (
 	}
 
 	SingleNodeChainConfig = &ChainConfig{
-		ChainID: big.NewInt(500),
+		ChainID: big.NewInt(176),
 		Minerva: &(MinervaConfig{
 			MinimumDifficulty:      big.NewInt(200),
 			MinimumFruitDifficulty: big.NewInt(2),

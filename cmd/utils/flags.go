@@ -1234,17 +1234,17 @@ func SetAbeychainConfig(ctx *cli.Context, stack *node.Node, cfg *abey.Config) {
 	switch {
 	case ctx.GlobalBool(TestnetFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 17800
+			cfg.NetworkId = 178
 		}
 		cfg.Genesis = core.DefaultTestnetGenesisBlock()
 	case ctx.GlobalBool(DevnetFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 200
+			cfg.NetworkId = 177
 		}
 		cfg.Genesis = core.DefaultDevGenesisBlock()
 	case ctx.GlobalBool(SingleNodeFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
-			cfg.NetworkId = 500
+			cfg.NetworkId = 176
 		}
 		cfg.Genesis = core.DefaultSingleNodeGenesisBlock()
 	}
