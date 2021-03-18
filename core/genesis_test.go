@@ -615,6 +615,12 @@ func Test02(t *testing.T) {
 	}
 	fmt.Println("finish")
 }
+func Test03(t *testing.T) {
+	addr := generateAddr()
+	fmt.Println("addr:",addr.Hex())
+	fmt.Println("abey-addr:",addr.StringToAbey())
+	fmt.Println("finish")
+}
 func TestRedeem(t *testing.T) {
 	want := uint64(100)
 	params.DposForkPoint = want

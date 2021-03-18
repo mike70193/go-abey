@@ -24,7 +24,7 @@ import (
 
 	"github.com/robertkrimen/otto"
 	"github.com/abeychain/go-abey/common"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/log"
 	"github.com/abeychain/go-abey/signer/core"
 	"github.com/abeychain/go-abey/signer/rules/deps"
@@ -235,7 +235,7 @@ func (r *rulesetUI) OnSignerStartup(info core.StartupInfo) {
 	}
 }
 
-func (r *rulesetUI) OnApprovedTx(tx trueapi.SignTransactionResult) {
+func (r *rulesetUI) OnApprovedTx(tx abeyapi.SignTransactionResult) {
 	jsonTx, err := json.Marshal(tx)
 	if err != nil {
 		log.Warn("failed marshalling transaction", "tx", tx)

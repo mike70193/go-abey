@@ -34,7 +34,7 @@ import (
 	"github.com/abeychain/go-abey/core/types"
 	"github.com/abeychain/go-abey/core/vm"
 	"github.com/abeychain/go-abey/abey/tracers"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/log"
 	"github.com/abeychain/go-abey/rlp"
 	"github.com/abeychain/go-abey/rpc"
@@ -605,11 +605,11 @@ func (api *PrivateDebugAPI) traceTx(ctx context.Context, message core.Message, v
 		if len(result.Revert()) > 0 {
 			returnVal = fmt.Sprintf("%x", result.Revert())
 		}
-		return &trueapi.ExecutionResult{
+		return &abeyapi.ExecutionResult{
 			Gas:         result.UsedGas,
 			Failed:      result.Failed(),
 			ReturnValue: returnVal,
-			StructLogs:  trueapi.FormatLogs(tracer.StructLogs()),
+			StructLogs:  abeyapi.FormatLogs(tracer.StructLogs()),
 		}, nil
 
 	case *tracers.Tracer:

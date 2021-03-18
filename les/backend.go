@@ -40,7 +40,7 @@ import (
 	"github.com/abeychain/go-abey/abey/filters"
 	"github.com/abeychain/go-abey/abey/gasprice"
 	"github.com/abeychain/go-abey/event"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/light"
 	"github.com/abeychain/go-abey/node"
 	"github.com/abeychain/go-abey/p2p"
@@ -78,7 +78,7 @@ type LightAbey struct {
 	accountManager *accounts.Manager
 
 	networkId     uint64
-	netRPCService *trueapi.PublicNetAPI
+	netRPCService *abeyapi.PublicNetAPI
 
 	wg sync.WaitGroup
 }
@@ -205,7 +205,7 @@ func (s *LightDummyAPI) Mining() bool {
 // APIs returns the collection of RPC services the ethereum package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
 func (s *LightAbey) APIs() []rpc.API {
-	apis := trueapi.GetAPIs(s.ApiBackend)
+	apis := abeyapi.GetAPIs(s.ApiBackend)
 	namespaces := []string{"abey", "eth"}
 	for _, name := range namespaces {
 		apis = append(apis, []rpc.API{
@@ -266,7 +266,7 @@ func (s *LightAbey) Protocols() []p2p.Protocol {
 func (s *LightAbey) Start(srvr *p2p.Server) error {
 	log.Warn("Light client mode is an experimental feature")
 	s.startBloomHandlers(params.BloomBitsBlocksClient)
-	s.netRPCService = trueapi.NewPublicNetAPI(srvr, s.networkId)
+	s.netRPCService = abeyapi.NewPublicNetAPI(srvr, s.networkId)
 	// clients are searching for the first advertised protocol in the list
 	protocolVersion := AdvertiseProtocolVersions[0]
 	s.serverPool.start(srvr, lesTopic(s.SnailBlockChain().Genesis().Hash(), protocolVersion))

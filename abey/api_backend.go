@@ -37,42 +37,42 @@ import (
 	"github.com/abeychain/go-abey/rpc"
 )
 
-// TRUEAPIBackend implements ethapi.Backend for full nodes
-type TrueAPIBackend struct {
+// ABEYAPIBackend implements ethapi.Backend for full nodes
+type ABEYAPIBackend struct {
 	abey *Abeychain
 	gpo   *gasprice.Oracle
 }
 
 // ChainConfig returns the active chain configuration.
-func (b *TrueAPIBackend) ChainConfig() *params.ChainConfig {
+func (b *ABEYAPIBackend) ChainConfig() *params.ChainConfig {
 	return b.abey.chainConfig
 }
 
 // CurrentBlock return the fast chain current Block
-func (b *TrueAPIBackend) CurrentBlock() *types.Block {
+func (b *ABEYAPIBackend) CurrentBlock() *types.Block {
 	return b.abey.blockchain.CurrentBlock()
 }
 
 // CurrentSnailBlock return the Snail chain current Block
-func (b *TrueAPIBackend) CurrentSnailBlock() *types.SnailBlock {
+func (b *ABEYAPIBackend) CurrentSnailBlock() *types.SnailBlock {
 	return b.abey.snailblockchain.CurrentBlock()
 }
 
 // SetHead Set the newest position of Fast Chain, that will reset the fast blockchain comment
-func (b *TrueAPIBackend) SetHead(number uint64) {
+func (b *ABEYAPIBackend) SetHead(number uint64) {
 	b.abey.protocolManager.downloader.Cancel()
 	b.abey.blockchain.SetHead(number)
 }
 
 // SetSnailHead Set the newest position of snail chain
-func (b *TrueAPIBackend) SetSnailHead(number uint64) {
+func (b *ABEYAPIBackend) SetSnailHead(number uint64) {
 	b.abey.protocolManager.downloader.Cancel()
 	b.abey.snailblockchain.SetHead(number)
 }
 
 // HeaderByNumber returns Header of fast chain by the number
 // rpc.PendingBlockNumber == "pending"; rpc.LatestBlockNumber == "latest" ; rpc.LatestBlockNumber == "earliest"
-func (b *TrueAPIBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error) {
+func (b *ABEYAPIBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Header, error) {
 	// Pending block is only known by the miner
 	if blockNr == rpc.PendingBlockNumber {
 		block := b.abey.miner.PendingBlock()
@@ -86,13 +86,13 @@ func (b *TrueAPIBackend) HeaderByNumber(ctx context.Context, blockNr rpc.BlockNu
 }
 
 // HeaderByHash returns header of fast chain by the hash
-func (b *TrueAPIBackend) HeaderByHash(ctx context.Context, hash common.Hash) (*types.Header, error) {
+func (b *ABEYAPIBackend) HeaderByHash(ctx context.Context, hash common.Hash) (*types.Header, error) {
 	return b.abey.blockchain.GetHeaderByHash(hash), nil
 }
 
 // SnailHeaderByNumber returns Header of snail chain by the number
 // rpc.PendingBlockNumber == "pending"; rpc.LatestBlockNumber == "latest" ; rpc.LatestBlockNumber == "earliest"
-func (b *TrueAPIBackend) SnailHeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.SnailHeader, error) {
+func (b *ABEYAPIBackend) SnailHeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.SnailHeader, error) {
 	// Pending block is only known by the miner
 	if blockNr == rpc.PendingBlockNumber {
 		block := b.abey.miner.PendingSnailBlock()
@@ -106,7 +106,7 @@ func (b *TrueAPIBackend) SnailHeaderByNumber(ctx context.Context, blockNr rpc.Bl
 }
 
 // BlockByNumber returns block of fast chain by the number
-func (b *TrueAPIBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {
+func (b *ABEYAPIBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.Block, error) {
 	// Only snailchain has miner, also return current block here for fastchain
 	if blockNr == rpc.PendingBlockNumber {
 		block := b.abey.blockchain.CurrentBlock()
@@ -120,7 +120,7 @@ func (b *TrueAPIBackend) BlockByNumber(ctx context.Context, blockNr rpc.BlockNum
 }
 
 // SnailBlockByNumber returns block of snial chain by the number
-func (b *TrueAPIBackend) SnailBlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.SnailBlock, error) {
+func (b *ABEYAPIBackend) SnailBlockByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*types.SnailBlock, error) {
 	// Pending block is only known by the miner
 	if blockNr == rpc.PendingBlockNumber {
 		block := b.abey.miner.PendingSnailBlock()
@@ -134,7 +134,7 @@ func (b *TrueAPIBackend) SnailBlockByNumber(ctx context.Context, blockNr rpc.Blo
 }
 
 // StateAndHeaderByNumber returns the state of block by the number
-func (b *TrueAPIBackend) StateAndHeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*state.StateDB, *types.Header, error) {
+func (b *ABEYAPIBackend) StateAndHeaderByNumber(ctx context.Context, blockNr rpc.BlockNumber) (*state.StateDB, *types.Header, error) {
 	// Pending state is only known by the miner
 	if blockNr == rpc.PendingBlockNumber {
 		state, _ := b.abey.blockchain.State()
@@ -151,22 +151,22 @@ func (b *TrueAPIBackend) StateAndHeaderByNumber(ctx context.Context, blockNr rpc
 }
 
 // GetBlock returns the block by the block's hash
-func (b *TrueAPIBackend) GetBlock(ctx context.Context, hash common.Hash) (*types.Block, error) {
+func (b *ABEYAPIBackend) GetBlock(ctx context.Context, hash common.Hash) (*types.Block, error) {
 	return b.abey.blockchain.GetBlockByHash(hash), nil
 }
 
 // GetSnailBlock returns the snail block by the block's hash
-func (b *TrueAPIBackend) GetSnailBlock(ctx context.Context, hash common.Hash) (*types.SnailBlock, error) {
+func (b *ABEYAPIBackend) GetSnailBlock(ctx context.Context, hash common.Hash) (*types.SnailBlock, error) {
 	return b.abey.snailblockchain.GetBlockByHash(hash), nil
 }
 
 // GetFruit returns the fruit by the block's hash
-func (b *TrueAPIBackend) GetFruit(ctx context.Context, fastblockHash common.Hash) (*types.SnailBlock, error) {
+func (b *ABEYAPIBackend) GetFruit(ctx context.Context, fastblockHash common.Hash) (*types.SnailBlock, error) {
 	return b.abey.snailblockchain.GetFruit(fastblockHash), nil
 }
 
 // GetReceipts returns the Receipt details by txhash
-func (b *TrueAPIBackend) GetReceipts(ctx context.Context, hash common.Hash) (types.Receipts, error) {
+func (b *ABEYAPIBackend) GetReceipts(ctx context.Context, hash common.Hash) (types.Receipts, error) {
 	if number := rawdb.ReadHeaderNumber(b.abey.chainDb, hash); number != nil {
 		return rawdb.ReadReceipts(b.abey.chainDb, hash, *number), nil
 	}
@@ -174,7 +174,7 @@ func (b *TrueAPIBackend) GetReceipts(ctx context.Context, hash common.Hash) (typ
 }
 
 // GetLogs returns the logs by txhash
-func (b *TrueAPIBackend) GetLogs(ctx context.Context, hash common.Hash) ([][]*types.Log, error) {
+func (b *ABEYAPIBackend) GetLogs(ctx context.Context, hash common.Hash) ([][]*types.Log, error) {
 	number := rawdb.ReadHeaderNumber(b.abey.chainDb, hash)
 	if number == nil {
 		return nil, nil
@@ -191,12 +191,12 @@ func (b *TrueAPIBackend) GetLogs(ctx context.Context, hash common.Hash) ([][]*ty
 }
 
 // GetTd returns the total diffcult with block height by blockhash
-func (b *TrueAPIBackend) GetTd(blockHash common.Hash) *big.Int {
+func (b *ABEYAPIBackend) GetTd(blockHash common.Hash) *big.Int {
 	return b.abey.snailblockchain.GetTdByHash(blockHash)
 }
 
 // GetEVM returns the EVM
-func (b *TrueAPIBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) {
+func (b *ABEYAPIBackend) GetEVM(ctx context.Context, msg core.Message, state *state.StateDB, header *types.Header, vmCfg vm.Config) (*vm.EVM, func() error, error) {
 	state.SetBalance(msg.From(), math.MaxBig256)
 	vmError := func() error { return nil }
 
@@ -205,32 +205,32 @@ func (b *TrueAPIBackend) GetEVM(ctx context.Context, msg core.Message, state *st
 }
 
 // SubscribeRemovedLogsEvent registers a subscription of RemovedLogsEvent in fast blockchain
-func (b *TrueAPIBackend) SubscribeRemovedLogsEvent(ch chan<- types.RemovedLogsEvent) event.Subscription {
+func (b *ABEYAPIBackend) SubscribeRemovedLogsEvent(ch chan<- types.RemovedLogsEvent) event.Subscription {
 	return b.abey.BlockChain().SubscribeRemovedLogsEvent(ch)
 }
 
 // SubscribeChainEvent registers a subscription of chainEvnet in fast blockchain
-func (b *TrueAPIBackend) SubscribeChainEvent(ch chan<- types.FastChainEvent) event.Subscription {
+func (b *ABEYAPIBackend) SubscribeChainEvent(ch chan<- types.FastChainEvent) event.Subscription {
 	return b.abey.BlockChain().SubscribeChainEvent(ch)
 }
 
 // SubscribeChainHeadEvent registers a subscription of chainHeadEvnet in fast blockchain
-func (b *TrueAPIBackend) SubscribeChainHeadEvent(ch chan<- types.FastChainHeadEvent) event.Subscription {
+func (b *ABEYAPIBackend) SubscribeChainHeadEvent(ch chan<- types.FastChainHeadEvent) event.Subscription {
 	return b.abey.BlockChain().SubscribeChainHeadEvent(ch)
 }
 
 // SubscribeChainSideEvent registers a subscription of chainSideEvnet in fast blockchain,deprecated
-func (b *TrueAPIBackend) SubscribeChainSideEvent(ch chan<- types.FastChainSideEvent) event.Subscription {
+func (b *ABEYAPIBackend) SubscribeChainSideEvent(ch chan<- types.FastChainSideEvent) event.Subscription {
 	return b.abey.BlockChain().SubscribeChainSideEvent(ch)
 }
 
 // SubscribeLogsEvent registers a subscription of log in fast blockchain
-func (b *TrueAPIBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
+func (b *ABEYAPIBackend) SubscribeLogsEvent(ch chan<- []*types.Log) event.Subscription {
 	return b.abey.BlockChain().SubscribeLogsEvent(ch)
 }
 
 // GetReward returns the Reward info by number in fastchain
-func (b *TrueAPIBackend) GetReward(number int64) *types.BlockReward {
+func (b *ABEYAPIBackend) GetReward(number int64) *types.BlockReward {
 	if number < 0 {
 		return b.abey.blockchain.CurrentReward()
 	}
@@ -238,21 +238,21 @@ func (b *TrueAPIBackend) GetReward(number int64) *types.BlockReward {
 }
 
 // GetSnailRewardContent returns the Reward content by number in Snailchain
-func (b *TrueAPIBackend) GetSnailRewardContent(snailNumber rpc.BlockNumber) *types.SnailRewardContenet {
+func (b *ABEYAPIBackend) GetSnailRewardContent(snailNumber rpc.BlockNumber) *types.SnailRewardContenet {
 	return b.abey.agent.GetSnailRewardContent(uint64(snailNumber))
 }
 
-func (b *TrueAPIBackend) GetChainRewardContent(blockNr rpc.BlockNumber) *types.ChainReward {
+func (b *ABEYAPIBackend) GetChainRewardContent(blockNr rpc.BlockNumber) *types.ChainReward {
 	sheight := uint64(blockNr)
 	return b.abey.blockchain.GetRewardInfos(sheight)
 }
 
 // GetStateChangeByFastNumber returns the Committee info by committee number
-func (b *TrueAPIBackend) GetStateChangeByFastNumber(fastNumber rpc.BlockNumber) *types.BlockBalance {
+func (b *ABEYAPIBackend) GetStateChangeByFastNumber(fastNumber rpc.BlockNumber) *types.BlockBalance {
 	return b.abey.blockchain.GetBalanceInfos(uint64(fastNumber))
 }
 
-func (b *TrueAPIBackend) GetBalanceChangeBySnailNumber(snailNumber rpc.BlockNumber) *types.BalanceChangeContent {
+func (b *ABEYAPIBackend) GetBalanceChangeBySnailNumber(snailNumber rpc.BlockNumber) *types.BalanceChangeContent {
 	var sBlock = b.abey.SnailBlockChain().GetBlockByNumber(uint64(snailNumber))
 	state, _ := b.abey.BlockChain().State()
 	var (
@@ -288,24 +288,24 @@ func (b *TrueAPIBackend) GetBalanceChangeBySnailNumber(snailNumber rpc.BlockNumb
 	return &types.BalanceChangeContent{addrWithBalance}
 }
 
-func (b *TrueAPIBackend) GetCommittee(number rpc.BlockNumber) (map[string]interface{}, error) {
+func (b *ABEYAPIBackend) GetCommittee(number rpc.BlockNumber) (map[string]interface{}, error) {
 	if number == rpc.LatestBlockNumber {
 		return b.abey.election.GetCommitteeById(new(big.Int).SetUint64(b.abey.agent.CommitteeNumber())), nil
 	}
 	return b.abey.election.GetCommitteeById(big.NewInt(number.Int64())), nil
 }
 
-func (b *TrueAPIBackend) GetCurrentCommitteeNumber() *big.Int {
+func (b *ABEYAPIBackend) GetCurrentCommitteeNumber() *big.Int {
 	return b.abey.election.GetCurrentCommitteeNumber()
 }
 
 // SendTx returns nil by success to add local txpool
-func (b *TrueAPIBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error {
+func (b *ABEYAPIBackend) SendTx(ctx context.Context, signedTx *types.Transaction) error {
 	return b.abey.txPool.AddLocal(signedTx)
 }
 
 // GetPoolTransactions returns Transactions by pending state in txpool
-func (b *TrueAPIBackend) GetPoolTransactions() (types.Transactions, error) {
+func (b *ABEYAPIBackend) GetPoolTransactions() (types.Transactions, error) {
 	pending, err := b.abey.txPool.Pending()
 	if err != nil {
 		return nil, err
@@ -318,82 +318,82 @@ func (b *TrueAPIBackend) GetPoolTransactions() (types.Transactions, error) {
 }
 
 // GetPoolTransaction returns Transaction by txHash in txpool
-func (b *TrueAPIBackend) GetPoolTransaction(hash common.Hash) *types.Transaction {
+func (b *ABEYAPIBackend) GetPoolTransaction(hash common.Hash) *types.Transaction {
 	return b.abey.txPool.Get(hash)
 }
 
 // GetPoolNonce returns user nonce by user address in txpool
-func (b *TrueAPIBackend) GetPoolNonce(ctx context.Context, addr common.Address) (uint64, error) {
+func (b *ABEYAPIBackend) GetPoolNonce(ctx context.Context, addr common.Address) (uint64, error) {
 	return b.abey.txPool.State().GetNonce(addr), nil
 }
 
 // Stats returns the count tx in txpool
-func (b *TrueAPIBackend) Stats() (pending int, queued int) {
+func (b *ABEYAPIBackend) Stats() (pending int, queued int) {
 	return b.abey.txPool.Stats()
 }
 
-func (b *TrueAPIBackend) TxPoolContent() (map[common.Address]types.Transactions, map[common.Address]types.Transactions) {
+func (b *ABEYAPIBackend) TxPoolContent() (map[common.Address]types.Transactions, map[common.Address]types.Transactions) {
 	return b.abey.TxPool().Content()
 }
 
 // SubscribeNewTxsEvent returns the subscript event of new tx
-func (b *TrueAPIBackend) SubscribeNewTxsEvent(ch chan<- types.NewTxsEvent) event.Subscription {
+func (b *ABEYAPIBackend) SubscribeNewTxsEvent(ch chan<- types.NewTxsEvent) event.Subscription {
 	return b.abey.TxPool().SubscribeNewTxsEvent(ch)
 }
 
 // Downloader returns the fast downloader
-func (b *TrueAPIBackend) Downloader() *downloader.Downloader {
+func (b *ABEYAPIBackend) Downloader() *downloader.Downloader {
 	return b.abey.Downloader()
 }
 
 // ProtocolVersion returns the version of protocol
-func (b *TrueAPIBackend) ProtocolVersion() int {
+func (b *ABEYAPIBackend) ProtocolVersion() int {
 	return b.abey.EthVersion()
 }
 
 // SuggestPrice returns tht suggest gas price
-func (b *TrueAPIBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
+func (b *ABEYAPIBackend) SuggestPrice(ctx context.Context) (*big.Int, error) {
 	return b.gpo.SuggestPrice(ctx)
 }
 
 // ChainDb returns tht database of fastchain
-func (b *TrueAPIBackend) ChainDb() abeydb.Database {
+func (b *ABEYAPIBackend) ChainDb() abeydb.Database {
 	return b.abey.ChainDb()
 }
 
 // EventMux returns Event locker
-func (b *TrueAPIBackend) EventMux() *event.TypeMux {
+func (b *ABEYAPIBackend) EventMux() *event.TypeMux {
 	return b.abey.EventMux()
 }
 
 // AccountManager returns Account Manager
-func (b *TrueAPIBackend) AccountManager() *accounts.Manager {
+func (b *ABEYAPIBackend) AccountManager() *accounts.Manager {
 	return b.abey.AccountManager()
 }
 
 // SnailPoolContent returns snail pool content
-func (b *TrueAPIBackend) SnailPoolContent() []*types.SnailBlock {
+func (b *ABEYAPIBackend) SnailPoolContent() []*types.SnailBlock {
 	return b.abey.SnailPool().Content()
 }
 
 // SnailPoolInspect returns snail pool Inspect
-func (b *TrueAPIBackend) SnailPoolInspect() []*types.SnailBlock {
+func (b *ABEYAPIBackend) SnailPoolInspect() []*types.SnailBlock {
 	return b.abey.SnailPool().Inspect()
 }
 
 // SnailPoolStats returns snail pool Stats
-func (b *TrueAPIBackend) SnailPoolStats() (pending int, unVerified int) {
+func (b *ABEYAPIBackend) SnailPoolStats() (pending int, unVerified int) {
 	return b.abey.SnailPool().Stats()
 }
 
 // BloomStatus returns Bloom Status
-func (b *TrueAPIBackend) BloomStatus() (uint64, uint64) {
+func (b *ABEYAPIBackend) BloomStatus() (uint64, uint64) {
 	sections, _, _ := b.abey.bloomIndexer.Sections()
 	return params.BloomBitsBlocks, sections
 }
 
 // ServiceFilter make the Filter for the truechian
-func (b *TrueAPIBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
+func (b *ABEYAPIBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
 	for i := 0; i < bloomFilterThreads; i++ {
 		go session.Multiplex(bloomRetrievalBatch, bloomRetrievalWait, b.abey.bloomRequests)
 	}

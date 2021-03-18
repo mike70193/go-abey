@@ -26,7 +26,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/abeychain/go-abey/common"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/log"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -234,7 +234,7 @@ func (ui *CommandlineUI) ShowInfo(message string) {
 	fmt.Printf("Info: %v\n", message)
 }
 
-func (ui *CommandlineUI) OnApprovedTx(tx trueapi.SignTransactionResult) {
+func (ui *CommandlineUI) OnApprovedTx(tx abeyapi.SignTransactionResult) {
 	fmt.Printf("Transaction signed:\n ")
 	spew.Dump(tx.Tx)
 }

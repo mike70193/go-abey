@@ -26,7 +26,7 @@ import (
 	"github.com/abeychain/go-abey/common"
 	"github.com/abeychain/go-abey/common/hexutil"
 	"github.com/abeychain/go-abey/core/types"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/signer/core"
 	"github.com/abeychain/go-abey/signer/storage"
 )
@@ -109,7 +109,7 @@ func (alwaysDenyUI) ShowInfo(message string) {
 	panic("implement me")
 }
 
-func (alwaysDenyUI) OnApprovedTx(tx trueapi.SignTransactionResult) {
+func (alwaysDenyUI) OnApprovedTx(tx abeyapi.SignTransactionResult) {
 	panic("implement me")
 }
 
@@ -238,7 +238,7 @@ func (d *dummyUI) ShowInfo(message string) {
 	d.calls = append(d.calls, "ShowInfo")
 }
 
-func (d *dummyUI) OnApprovedTx(tx trueapi.SignTransactionResult) {
+func (d *dummyUI) OnApprovedTx(tx abeyapi.SignTransactionResult) {
 	d.calls = append(d.calls, "OnApprovedTx")
 }
 func (d *dummyUI) OnSignerStartup(info core.StartupInfo) {
@@ -268,7 +268,7 @@ func TestForwarding(t *testing.T) {
 	r.ShowInfo("test")
 
 	//This one is not forwarded
-	r.OnApprovedTx(trueapi.SignTransactionResult{})
+	r.OnApprovedTx(abeyapi.SignTransactionResult{})
 
 	expCalls := 8
 	if len(ui.calls) != expCalls {
@@ -490,7 +490,7 @@ func TestLimitWindow(t *testing.T) {
 		}
 		// Create a dummy signed transaction
 
-		response := trueapi.SignTransactionResult{
+		response := abeyapi.SignTransactionResult{
 			Tx:  dummySigned(v),
 			Raw: common.Hex2Bytes("deadbeef"),
 		}
@@ -550,7 +550,7 @@ func (d *dontCallMe) ShowInfo(message string) {
 	d.t.Fatalf("Did not expect next-handler to be called")
 }
 
-func (d *dontCallMe) OnApprovedTx(tx trueapi.SignTransactionResult) {
+func (d *dontCallMe) OnApprovedTx(tx abeyapi.SignTransactionResult) {
 	d.t.Fatalf("Did not expect next-handler to be called")
 }
 

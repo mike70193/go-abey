@@ -28,7 +28,7 @@ import (
 	"github.com/abeychain/go-abey/accounts"
 	"github.com/abeychain/go-abey/core/types"
 	"github.com/abeychain/go-abey/event"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/rpc"
 	"github.com/abeychain/go-abey/signer/core"
 )
@@ -181,7 +181,7 @@ func (api *ExternalSigner) SignText(account accounts.Account, text []byte) ([]by
 }
 
 func (api *ExternalSigner) SignTx(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error) {
-	res := trueapi.SignTransactionResult{}
+	res := abeyapi.SignTransactionResult{}
 	data := hexutil.Bytes(tx.Data())
 	var to *common.MixedcaseAddress
 	if tx.To() != nil {

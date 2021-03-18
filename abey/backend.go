@@ -46,7 +46,7 @@ import (
 	"github.com/abeychain/go-abey/abey/gasprice"
 	"github.com/abeychain/go-abey/abeydb"
 	"github.com/abeychain/go-abey/event"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/log"
 	"github.com/abeychain/go-abey/miner"
 	"github.com/abeychain/go-abey/node"
@@ -94,14 +94,14 @@ type Abeychain struct {
 	bloomRequests chan chan *bloombits.Retrieval // Channel receiving bloom data retrieval requests
 	bloomIndexer  *core.ChainIndexer             // Bloom indexer operating during block imports
 
-	APIBackend *TrueAPIBackend
+	APIBackend *ABEYAPIBackend
 
 	miner     *miner.Miner
 	gasPrice  *big.Int
 	etherbase common.Address
 
 	networkID     uint64
-	netRPCService *trueapi.PublicNetAPI
+	netRPCService *abeyapi.PublicNetAPI
 
 	pbftServer *tbft.Node
 
@@ -242,7 +242,7 @@ func New(ctx *node.ServiceContext, config *Config) (*Abeychain, error) {
 		abey.miner.SetElection(abey.config.EnableElection, crypto.FromECDSAPub(&committeeKey.PublicKey))
 	}
 
-	abey.APIBackend = &TrueAPIBackend{abey, nil}
+	abey.APIBackend = &ABEYAPIBackend{abey, nil}
 	gpoParams := config.GPO
 	if gpoParams.Default == nil {
 		gpoParams.Default = config.GasPrice
@@ -319,7 +319,7 @@ func CreateConsensusEngine(ctx *node.ServiceContext, config *ethash.Config, chai
 // APIs return the collection of RPC services the abey package offers.
 // NOTE, some of these services probably need to be moved to somewhere else.
 func (s *Abeychain) APIs() []rpc.API {
-	apis := trueapi.GetAPIs(s.APIBackend)
+	apis := abeyapi.GetAPIs(s.APIBackend)
 
 	// Append any APIs exposed explicitly by the consensus engine
 	apis = append(apis, s.engine.APIs(s.BlockChain())...)
@@ -491,7 +491,7 @@ func (s *Abeychain) Start(srvr *p2p.Server) error {
 	s.startBloomHandlers()
 
 	// Start the RPC service
-	s.netRPCService = trueapi.NewPublicNetAPI(srvr, s.NetVersion())
+	s.netRPCService = abeyapi.NewPublicNetAPI(srvr, s.NetVersion())
 
 	// Figure out a max peers count based on the server limits
 	maxPeers := srvr.MaxPeers

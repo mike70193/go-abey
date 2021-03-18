@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package trueapi
+package abeyapi
 
 import (
 	"bytes"
@@ -56,25 +56,25 @@ var (
 	LocalTxMetrics = metrics.NewRegisteredMeter("abey/prop/local_tx/in", nil)
 )
 
-// PublicTrueAPI provides an API to access True related information.
+// PublicABEYAPI provides an API to access True related information.
 // It offers only methods that operate on public data that is freely available to anyone.
-type PublicTrueAPI struct {
+type PublicABEYAPI struct {
 	b Backend
 }
 
-// NewPublicTrueAPI creates a new True protocol API.
-func NewPublicTrueAPI(b Backend) *PublicTrueAPI {
-	return &PublicTrueAPI{b}
+// NewPublicABEYAPI creates a new True protocol API.
+func NewPublicABEYAPI(b Backend) *PublicABEYAPI {
+	return &PublicABEYAPI{b}
 }
 
 // GasPrice returns a suggestion for a gas price.
-func (s *PublicTrueAPI) GasPrice(ctx context.Context) (*hexutil.Big, error) {
+func (s *PublicABEYAPI) GasPrice(ctx context.Context) (*hexutil.Big, error) {
 	price, err := s.b.SuggestPrice(ctx)
 	return (*hexutil.Big)(price), err
 }
 
 // ProtocolVersion returns the current True protocol version this node supports
-func (s *PublicTrueAPI) ProtocolVersion() hexutil.Uint {
+func (s *PublicABEYAPI) ProtocolVersion() hexutil.Uint {
 	return hexutil.Uint(s.b.ProtocolVersion())
 }
 
@@ -85,7 +85,7 @@ func (s *PublicTrueAPI) ProtocolVersion() hexutil.Uint {
 // - highestBlock:  block number of the highest block header this node has received from peers
 // - pulledStates:  number of state entries processed until now
 // - knownStates:   number of known state entries that still need to be pulled
-func (s *PublicTrueAPI) Syncing() (interface{}, error) {
+func (s *PublicABEYAPI) Syncing() (interface{}, error) {
 	progress := s.b.Downloader().Progress()
 
 	// Return not syncing if the synchronisation already completed

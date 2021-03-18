@@ -32,7 +32,7 @@ import (
 	"github.com/abeychain/go-abey/common"
 	"github.com/abeychain/go-abey/common/hexutil"
 	"github.com/abeychain/go-abey/core/types"
-	"github.com/abeychain/go-abey/internal/trueapi"
+	"github.com/abeychain/go-abey/internal/abeyapi"
 	"github.com/abeychain/go-abey/rlp"
 )
 
@@ -44,7 +44,7 @@ type HeadlessUI struct {
 func (ui *HeadlessUI) OnSignerStartup(info StartupInfo) {
 }
 
-func (ui *HeadlessUI) OnApprovedTx(tx trueapi.SignTransactionResult) {
+func (ui *HeadlessUI) OnApprovedTx(tx abeyapi.SignTransactionResult) {
 	fmt.Printf("OnApproved called")
 }
 
@@ -276,7 +276,7 @@ func TestSignTx(t *testing.T) {
 
 	var (
 		list      Accounts
-		res, res2 *trueapi.SignTransactionResult
+		res, res2 *abeyapi.SignTransactionResult
 		err       error
 	)
 

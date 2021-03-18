@@ -15,7 +15,7 @@
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
 // Package ethapi implements the general True API functions.
-package trueapi
+package abeyapi
 
 import (
 	"context"
@@ -100,7 +100,7 @@ func GetAPIs(apiBackend Backend) []rpc.API {
 			{
 				Namespace: name,
 				Version:   "1.0",
-				Service:   NewPublicTrueAPI(apiBackend),
+				Service:   NewPublicABEYAPI(apiBackend),
 				Public:    true,
 			}, {
 				Namespace: name,
