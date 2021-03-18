@@ -4049,11 +4049,11 @@ require = (function e(t, n, r) {
         };
         var outputMembersFormatter = function (member) {
 
-            var address = utils.base58Encode(utils.strToBytes(member.coinbase));
-            member.coinbase = "abey" + address;
-            address = utils.base58Encode(utils.strToBytes(member.committeeBase));
-            member.committeeBase = "abey" + address;
-            member.publickey = utils.toHex(member.publickey);
+            // var address = utils.base58Encode(utils.strToBytes(member.coinbase));
+            // member.coinbase = "abey" + address;
+            // address = utils.base58Encode(utils.strToBytes(member.committeeBase));
+            // member.committeeBase = "abey" + address;
+            // member.publickey = utils.toHex(member.publickey);
             return member;
         };
 
@@ -4068,7 +4068,7 @@ require = (function e(t, n, r) {
 
             // transform to number
             block.gasLimit = utils.toDecimal(block.gasLimit);
-            block.maker = outputAddressFormatter(block.maker);
+            // block.maker = outputAddressFormatter(block.maker);
             block.gasUsed = utils.toDecimal(block.gasUsed);
             block.size = utils.toDecimal(block.size);
             block.timestamp = utils.toDecimal(block.timestamp);
@@ -4107,7 +4107,7 @@ require = (function e(t, n, r) {
             // transform to number
             block.size = utils.toDecimal(block.size);
             block.timestamp = utils.toDecimal(block.timestamp);
-            block.miner = outputAddressFormatter(block.miner);
+            // block.miner = outputAddressFormatter(block.miner);
             if (block.number !== null)
                 block.number = utils.toDecimal(block.number);
 
@@ -4260,16 +4260,16 @@ require = (function e(t, n, r) {
 
          var outputAddressFormatter = function (result) {
              console.log(result)
-             var address = utils.base58Encode(utils.strToBytes(result));
-            return "abey" + address;
+             var address = utils.base58Encode(result)
+             // var address = utils.base58Encode(utils.strToBytes(result));
+             return "abey" + address;
          };
 
          var outputAddressFormatters = function (result) {
-
              var hexA = new Array();
              for(var i=0; i<result.length; i++)
              {
-                 var address = utils.base58Encode(utils.strToBytes(result[i]));
+                 var address = utils.base58Encode(result[i]);
                  hexA.push("abey" +address);
              }
 
@@ -5999,8 +5999,8 @@ require = (function e(t, n, r) {
                 }),
                 new Property({
                     name: 'committeeBase',
-                    getter: 'abey_committeeBase',
-                    outputFormatter: formatters.outputAddressFormatter
+                    getter: 'abey_committeeBase'
+                    // outputFormatter: formatters.outputAddressFormatter
                 }),
                 new Property({
                     name: 'isCommitteeMember',
