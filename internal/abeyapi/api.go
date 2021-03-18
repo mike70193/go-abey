@@ -27,9 +27,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
-	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/util"
 	"github.com/abeychain/go-abey/accounts"
 	"github.com/abeychain/go-abey/accounts/keystore"
 	"github.com/abeychain/go-abey/common"
@@ -46,6 +43,9 @@ import (
 	"github.com/abeychain/go-abey/params"
 	"github.com/abeychain/go-abey/rlp"
 	"github.com/abeychain/go-abey/rpc"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 const (
@@ -1058,7 +1058,7 @@ func RPCMarshalBlock(b *types.Block, inclTx bool, fullTx bool) (map[string]inter
 		"hash":             b.Hash(),
 		"parentHash":       head.ParentHash,
 		"committeeRoot":    head.CommitteeHash,
-		"maker":            head.Proposer,
+		"maker":            head.Proposer.StringToAbey(),
 		"logsBloom":        head.Bloom,
 		"stateRoot":        head.Root,
 		"snailHash":        head.SnailHash,
@@ -1095,9 +1095,9 @@ func RPCMarshalBlock(b *types.Block, inclTx bool, fullTx bool) (map[string]inter
 
 	formatMembers := func(commit *types.CommitteeMember) (map[string]interface{}, error) {
 		members := map[string]interface{}{
-			"coinbase":      commit.Coinbase,
-			"committeeBase": commit.CommitteeBase,
-			"publickey":     commit.Publickey,
+			"coinbase":      commit.Coinbase.StringToAbey(),
+			"committeeBase": commit.CommitteeBase.StringToAbey(),
+			"publickey":     hexutil.Bytes(commit.Publickey),
 			"flag":          commit.Flag,
 			"mType":         commit.MType,
 		}
@@ -1156,7 +1156,7 @@ func RPCMarshalSnailBlock(b *types.SnailBlock, inclFruit bool) (map[string]inter
 		"fruitsHash": head.FruitsHash,
 		"nonce":      head.Nonce,
 		"mixHash":    head.MixDigest,
-		"miner":      head.Coinbase,
+		"miner":      head.Coinbase.StringToAbey(),
 		"difficulty": (*hexutil.Big)(head.Difficulty),
 		"extraData":  hexutil.Bytes(head.Extra),
 		"size":       hexutil.Uint64(b.Size()),
@@ -1170,7 +1170,7 @@ func RPCMarshalSnailBlock(b *types.SnailBlock, inclFruit bool) (map[string]inter
 				"number":     (*hexutil.Big)(fruit.Header().FastNumber),
 				"hash":       fruit.Hash(),
 				"nonce":      fruit.Header().Nonce,
-				"miner":      fruit.Header().Coinbase,
+				"miner":      fruit.Header().Coinbase.StringToAbey(),
 				"difficulty": (*hexutil.Big)(fruit.Header().FruitDifficulty),
 			}, nil
 		}
