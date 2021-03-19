@@ -247,6 +247,7 @@ func updateForkedPoint(forkedID, fastNumber *big.Int, config *params.ChainConfig
 }
 
 func InitTIP8(config *params.ChainConfig, reader SnailChainReader) {
+	return
 	if params.DposForkPoint == 0 {
 		params.DposForkPoint = config.TIP7.FastNumber.Uint64() * 10
 	}
