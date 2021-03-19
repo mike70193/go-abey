@@ -59,7 +59,7 @@ var (
 		TIP3: &BlockConfig{FastNumber: big.NewInt(0)},
 		TIP5: &BlockConfig{SnailNumber: big.NewInt(0)},
 		TIP7: &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
+		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(-1)},
 		TIP9: &BlockConfig{SnailNumber: big.NewInt(47000)},
 	}
 
@@ -95,7 +95,7 @@ var (
 		TIP3: &BlockConfig{FastNumber: big.NewInt(0)},
 		TIP5: &BlockConfig{SnailNumber: big.NewInt(0)},
 		TIP7: &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
+		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(-1)},
 		TIP9: &BlockConfig{SnailNumber: big.NewInt(38648)},
 	}
 
@@ -131,7 +131,7 @@ var (
 		TIP3: &BlockConfig{FastNumber: big.NewInt(0)},
 		TIP5: &BlockConfig{SnailNumber: big.NewInt(0)},
 		TIP7: &BlockConfig{FastNumber: big.NewInt(0)},
-		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(0)},
+		TIP8: &BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(-1)},
 		TIP9: &BlockConfig{SnailNumber: big.NewInt(20)},
 	}
 

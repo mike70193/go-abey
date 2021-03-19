@@ -4042,7 +4042,7 @@ require = (function e(t, n, r) {
 
             for(var i=0; i<result.members.length; i++)
             {
-                var address = utils.base58Encode(utils.strToBytes(result.members[i].coinbase));
+                var address = utils.base58Encode(result.members[i].coinbase);
                 result.members[i].coinbaseAbey = "abey" + address;
             }
             return result;
