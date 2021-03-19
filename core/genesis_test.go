@@ -20,7 +20,9 @@ package core
 import (
 	"bytes"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"encoding/xml"
 	"github.com/abeychain/go-abey/abeydb"
 	"github.com/abeychain/go-abey/common"
 	"github.com/abeychain/go-abey/common/base58"
@@ -34,7 +36,9 @@ import (
 	"github.com/abeychain/go-abey/crypto"
 	"github.com/abeychain/go-abey/params"
 	"github.com/davecgh/go-spew/spew"
+	"io"
 	"math/big"
+	"os"
 	"reflect"
 	"sort"
 	"testing"
@@ -620,6 +624,74 @@ func Test03(t *testing.T) {
 	fmt.Println("addr:",addr.Hex())
 	fmt.Println("abey-addr:",addr.StringToAbey())
 	fmt.Println("finish")
+}
+
+func Test04(t *testing.T) {
+	var marshalErrorTests = []struct {
+		Value interface{}
+		Err   string
+		Kind  reflect.Kind
+	}{
+		//{
+		//	Value: make(chan bool),
+		//	Err:   "xml: unsupported type: chan bool",
+		//	Kind:  reflect.Chan,
+		//},
+		//{
+		//	Value: map[string]string{
+		//		"question": "What do you get when you multiply six by nine?",
+		//		"answer":   "42",
+		//	},
+		//	Err:  "xml: unsupported type: map[string]string",
+		//	Kind: reflect.Map,
+		//},
+		{
+			Value: map[common.Address]*types.BalanceInfo {
+				generateAddr():&types.BalanceInfo{
+					Address: generateAddr(),
+					Valid: big.NewInt(1),
+					Lock: big.NewInt(0),
+				},
+			},
+			Err:   "xml: unsupported type: map[*xml.Ship]bool",
+			Kind:  reflect.Map,
+		},
+	}
+
+	for idx, test := range marshalErrorTests {
+		data, err := xml.Marshal(test.Value)
+		if err == nil {
+			t.Errorf("#%d: marshal(%#v) = [success] %q, want error %v", idx, test.Value, data, test.Err)
+			continue
+		}
+		if err.Error() != test.Err {
+			t.Errorf("#%d: marshal(%#v) = [error] %v, want %v", idx, test.Value, err, test.Err)
+		}
+		if test.Kind != reflect.Invalid {
+			if kind := err.(*xml.UnsupportedTypeError).Type.Kind(); kind != test.Kind {
+				t.Errorf("#%d: marshal(%#v) = [error kind] %s, want %s", idx, test.Value, kind, test.Kind)
+			}
+		}
+	}
+}
+
+func dump(w io.Writer, val interface{}) error {
+	je := json.NewEncoder(w)
+	return je.Encode(val)
+}
+
+func Test05(t *testing.T) {
+	Value := map[common.Address]*types.BalanceInfo {
+	generateAddr():&types.BalanceInfo{
+		Address: generateAddr(),
+		Valid: big.NewInt(1),
+		Lock: big.NewInt(0),
+	},
+}
+	err := dump(os.Stdout, Value)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 func TestRedeem(t *testing.T) {
 	want := uint64(100)

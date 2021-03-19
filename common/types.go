@@ -249,31 +249,34 @@ func (a *Address) SetBytes(b []byte) {
 	copy(a[AddressLength-len(b):], b)
 }
 
-// MarshalText returns the hex representation of a.
-//func (a Address) MarshalText() ([]byte, error) {
-//	return hexutil.Bytes(a[:]).MarshalText()
-//}
+//MarshalText returns the hex representation of a.
+func (a Address) MarshalText() ([]byte, error) {
+	return hexutil.Bytes(a[:]).MarshalText()
+}
 
 // UnmarshalText parses a hash in hex syntax.
-//func (a *Address) UnmarshalText(input []byte) error {
-//	return hexutil.UnmarshalFixedText("Address", input, a[:])
-//}
+func (a *Address) UnmarshalText(input []byte) error {
+	return hexutil.UnmarshalFixedText("Address", input, a[:])
+}
 
 // UnmarshalJSON parses a hash in hex syntax.
 func (a *Address) UnmarshalJSON(input []byte) error {
 	return hexutil.UnmarshalFixedJSON(addressT, input, a[:])
 }
-func (a *Address) MarshalText() ([]byte, error) {
-	return []byte(a.StringToAbey()), nil
-}
+//func (a *Address) MarshalText() ([]byte, error) {
+//	return []byte(a.StringToAbey()), nil
+//}
+//func (a *Address) MarshalJSON() ([]byte, error) {
+//	return []byte(a.StringToAbey()), nil
+//}
 // UnmarshalText implements the encoding.TextUnmarshaler interface.
-func (a *Address) UnmarshalText(input []byte) error {
-	if "0x" == string(input)[0:2] || "0X" == string(input)[0:2]{
-		return hexutil.UnmarshalFixedText("Address", input, a[:])
-	} else {
-		return a.FromAbeyString(string(input))
-	}
-}
+//func (a *Address) UnmarshalText(input []byte) error {
+//	if "0x" == string(input)[0:2] || "0X" == string(input)[0:2]{
+//		return hexutil.UnmarshalFixedText("Address", input, a[:])
+//	} else {
+//		return a.FromAbeyString(string(input))
+//	}
+//}
 // Scan implements Scanner for database/sql.
 func (a *Address) Scan(src interface{}) error {
 	srcB, ok := src.([]byte)
