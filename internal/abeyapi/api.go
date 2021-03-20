@@ -1582,14 +1582,17 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(ctx context.Context, ha
 
 	var signer types.Signer = types.NewTIP1Signer(tx.ChainId())
 	from, _ := types.Sender(signer, tx)
-
+    toAddr := ""
+    if tx.To() != nil {
+    	toAddr = tx.To().StringToAbey()
+	}
 	fields := map[string]interface{}{
 		"blockHash":         blockHash,
 		"blockNumber":       hexutil.Uint64(blockNumber),
 		"transactionHash":   hash,
 		"transactionIndex":  hexutil.Uint64(index),
 		"from":              from.StringToAbey(),
-		"to":                tx.To().StringToAbey(),
+		"to":                toAddr,
 		"gasUsed":           hexutil.Uint64(receipt.GasUsed),
 		"cumulativeGasUsed": hexutil.Uint64(receipt.CumulativeGasUsed),
 		"contractAddress":   nil,
