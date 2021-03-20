@@ -1356,7 +1356,10 @@ func newRPCTransaction(tx *types.Transaction, blockHash common.Hash, blockNumber
 	var signer types.Signer = types.NewTIP1Signer(tx.ChainId())
 	from, _ := types.Sender(signer, tx)
 	v, r, s := tx.RawSignatureValues()
-
+	toaddr := ""
+	if tx.To() != nil {
+		toaddr = tx.To().StringToAbey()
+	}
 	result := &RPCTransaction{
 		From:     from.StringToAbey(),
 		Gas:      hexutil.Uint64(tx.Gas()),
@@ -1364,7 +1367,7 @@ func newRPCTransaction(tx *types.Transaction, blockHash common.Hash, blockNumber
 		Hash:     tx.Hash(),
 		Input:    hexutil.Bytes(tx.Data()),
 		Nonce:    hexutil.Uint64(tx.Nonce()),
-		To:       tx.To().StringToAbey(),
+		To:       toaddr,
 		Value:    (*hexutil.Big)(tx.Value()),
 		V:        (*hexutil.Big)(v),
 		R:        (*hexutil.Big)(r),
