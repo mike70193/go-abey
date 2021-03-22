@@ -751,7 +751,7 @@ func (e *Election) GetCommittee(fastNumber *big.Int) []*types.CommitteeMember {
 // GetCommitteeById return committee info sepecified by Committee ID
 func (e *Election) GetCommitteeById(id *big.Int) map[string]interface{} {
 	info := make(map[string]interface{})
-	if id.Cmp(e.chainConfig.TIP8.CID) > 0 {
+	if id.Cmp(e.chainConfig.TIP8.CID) >= 0 {
 		epoch := types.GetEpochFromID(id.Uint64())
 		members := e.getValidators(big.NewInt(int64(epoch.BeginHeight)))
 		if members == nil {
