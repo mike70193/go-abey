@@ -562,9 +562,9 @@ func DefaultDevGenesisBlock() *Genesis {
 		},
 		Committee: []*types.CommitteeMember{
 			{Coinbase: common.HexToAddress("0x3e3429F72450A39CE227026E8DdeF331E9973E4d"), Publickey: key1},
-			{Coinbase: common.HexToAddress("0x3e3429F72450A39CE227026E8DdeF331E9973E4d"), Publickey: key2},
-			{Coinbase: common.HexToAddress("0x3e3429F72450A39CE227026E8DdeF331E9973E4d"), Publickey: key3},
-			{Coinbase: common.HexToAddress("0x3e3429F72450A39CE227026E8DdeF331E9973E4d"), Publickey: key4},
+			{Coinbase: common.HexToAddress("0xf353ab1417177F766497bF716D7aAd4ECd5f36C8"), Publickey: key2},
+			{Coinbase: common.HexToAddress("0x8fF345746C3d3435a105538E4c024Af5FE700598"), Publickey: key3},
+			{Coinbase: common.HexToAddress("0xf0C8898B2016Afa0Ec5912413ebe403930446779"), Publickey: key4},
 		},
 	}
 }
@@ -606,7 +606,7 @@ func DefaultTestnetGenesisBlock() *Genesis {
 	seedkey4 := hexutil.MustDecode("0x04718502f879a949ca5fa29f78f1d3cef362ecdc36ee42a3023cca80371c2e1936d1f632a0ec5bf5edb2af228a5ba1669d31ea55df87548de172e5767b9201097d")
 
 	// seed4
-	coinbase := common.HexToAddress("0xf0C8898B2016Afa0Ec5912413ebe403930446779")
+	//coinbase := common.HexToAddress("0xf0C8898B2016Afa0Ec5912413ebe403930446779")
 	amount1, _ := new(big.Int).SetString("24000000000000000000000000", 10)
 	return &Genesis{
 		Config:     params.TestnetChainConfig,
@@ -622,10 +622,10 @@ func DefaultTestnetGenesisBlock() *Genesis {
 			common.HexToAddress("0xf0C8898B2016Afa0Ec5912413ebe403930446779"): {Balance: amount1},
 		},
 		Committee: []*types.CommitteeMember{
-			&types.CommitteeMember{Coinbase: coinbase, Publickey: seedkey1},
-			&types.CommitteeMember{Coinbase: coinbase, Publickey: seedkey2},
-			&types.CommitteeMember{Coinbase: coinbase, Publickey: seedkey3},
-			&types.CommitteeMember{Coinbase: coinbase, Publickey: seedkey4},
+			&types.CommitteeMember{Coinbase: common.HexToAddress("0x3e3429F72450A39CE227026E8DdeF331E9973E4d"), Publickey: seedkey1},
+			&types.CommitteeMember{Coinbase: common.HexToAddress("0xf353ab1417177F766497bF716D7aAd4ECd5f36C8"), Publickey: seedkey2},
+			&types.CommitteeMember{Coinbase: common.HexToAddress("0x8fF345746C3d3435a105538E4c024Af5FE700598"), Publickey: seedkey3},
+			&types.CommitteeMember{Coinbase: common.HexToAddress("0xf0C8898B2016Afa0Ec5912413ebe403930446779"), Publickey: seedkey4},
 		},
 	}
 }
