@@ -194,7 +194,7 @@ func IsTIP8(fastHeadNumber *big.Int, config *params.ChainConfig, reader SnailCha
 	if config.TIP8.CID.Sign() < 0 {
 		return true
 	}
-	if config.TIP8.FastNumber != nil && config.TIP8.FastNumber.Sign() > 0 {
+	if config.TIP8.FastNumber != nil && config.TIP8.FastNumber.Sign() >= 0 {
 		return fastHeadNumber.Cmp(config.TIP8.FastNumber) >= 0
 	}
 
