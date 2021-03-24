@@ -634,6 +634,9 @@ func Test03(t *testing.T) {
 		addr := generateAddr()
 		fmt.Println("addr:",addr.Hex())
 		fmt.Println("abey-addr:",addr.StringToAbey())
+		a := common.Address{}
+		a.FromAbeyString(addr.StringToAbey())
+		fmt.Println("addr2:",a.Hex())
 	}
 	fmt.Println("finish")
 }
