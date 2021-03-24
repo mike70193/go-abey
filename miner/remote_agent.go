@@ -134,13 +134,7 @@ func (a *RemoteAgent) GetWork() ([4]string, error) {
 	if a.currentWork != nil {
 		block := a.currentWork.Block
 		// epoch := uint64((block.Number().Uint64() - 1) / UPDATABLOCKLENGTH)
-
-		blockNum := block.Number().Uint64()
-		tip9 := a.chain.Config().TIP9.SnailNumber.Uint64()
-		if tip9 < blockNum {
-			blockNum = tip9
-		}
-		epoch := uint64((blockNum - 1) / UPDATABLOCKLENGTH)
+		epoch := uint64(0)
 		block.Number()
 		res[0] = block.HashNoNonce().Hex()
 		//DatasetHash := a.engine.DataSetHash(block.NumberU64())
@@ -267,32 +261,7 @@ func (a *RemoteAgent) GetDataset() ([DATASETHEADLENGH]string, error) {
 
 	//var res [DATASETHEADLENGH][]byte
 	var res [DATASETHEADLENGH]string
-
-	if a.currentWork != nil {
-		block := a.currentWork.Block
-		blockNum := block.Number().Uint64()
-		tip9 := a.chain.Config().TIP9.SnailNumber.Uint64()
-		if tip9 < blockNum {
-			blockNum = tip9
-		}
-		epoch := uint64((blockNum - 1) / UPDATABLOCKLENGTH)
-		if epoch == 0 {
-			return res, errors.New("the epoch is zore not need dataset")
-		}
-		st_block_num := uint64((epoch-1)*UPDATABLOCKLENGTH + 1)
-
-		for i := 0; i < DATASETHEADLENGH; i++ {
-			header := a.snailchain.GetHeaderByNumber(uint64(i) + st_block_num)
-			if header == nil {
-				log.Error("header is nill  ", "blockNum is:  ", (uint64(i) + st_block_num))
-				return res, errors.New("GetDataset get heard fial")
-			}
-			res[i] = "0x" + hex.EncodeToString(header.Hash().Bytes()[:16])
-		}
-		return res, nil
-	}
-
-	return res, errors.New("No work available yet, Don't panic.")
+	return res, errors.New("the epoch is zore not need dataset")
 }
 
 //GetWork return the current block hash without nonce

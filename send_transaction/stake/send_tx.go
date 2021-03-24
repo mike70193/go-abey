@@ -474,7 +474,8 @@ func sendOtherContractTransaction(client *abeyclient.Client, f, toAddress common
 	return signedTx.Hash(), err
 }
 
-func sendContractTransaction(client *abeyclient.Client, from, toAddress common.Address, value *big.Int, privateKey *ecdsa.PrivateKey, input []byte, method string) (common.Hash, error) {
+func sendContractTransaction(client *abeyclient.Client, from, toAddress common.Address,
+	value *big.Int, privateKey *ecdsa.PrivateKey, input []byte, method string) (common.Hash, error) {
 	blockMutex.Lock()
 	defer blockMutex.Unlock()
 

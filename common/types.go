@@ -222,16 +222,13 @@ func (a Address) String() string {
 }
 
 func (a Address) StringToAbey() string {
-	return "abey" + base58.Encode(a[:])
+	return base58.CheckEncode(a[:])
 }
 
 func (a *Address) FromAbeyString(vc string) error {
-	if 0 != strings.Compare("abey",vc[0:4]) {
-		return base58.ErrInvalidFormat
-	}
-	b := base58.Decode(vc[4:])
+	b,err := base58.CheckDecode(vc[:])
 	a.SetBytes(b)
-	return nil
+	return err
 }
 
 // Format implements fmt.Formatter, forcing the byte slice to be formatted as is,

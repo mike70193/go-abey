@@ -7,6 +7,7 @@ package base58
 import (
 	"crypto/sha256"
 	"errors"
+	"strings"
 )
 
 // ErrChecksum indicates that the checksum of a check-encoded string does not verify against
@@ -26,21 +27,22 @@ func checksum(input []byte) (cksum [4]byte) {
 
 // CheckEncode prepends a version byte and appends a four byte checksum.
 func CheckEncode(input []byte) string {
-	b := make([]byte, 0, len(input)+4)
+	b := make([]byte, 0, 1+len(input)+4)
+	b = append(b, 0x01)
 	b = append(b, input[:]...)
 	cksum := checksum(b)
 	b = append(b, cksum[:]...)
-	addr := "Vc" + Encode(b)
+	addr := "ABEY" + Encode(b)
 	return addr
 }
 
 // CheckDecode decodes a string that was encoded with CheckEncode and verifies the checksum.
 func CheckDecode(input string) (result []byte, err error) {
-	if !('V' == input[0] && 'c' == input[1]) {
+	if 0 != strings.Compare("ABEY",input[0:4]) {
 		return nil,ErrInvalidFormat
 	}
-	decoded := Decode(input[2:])
-	if len(decoded) < 6 {
+	decoded := Decode(input[4:])
+	if len(decoded) < 5 {
 		return nil, ErrInvalidFormat
 	}
 	

@@ -51,8 +51,7 @@ func ExampleGenerateChain() {
 		gspec   = &Genesis{
 			Config: &params.ChainConfig{ChainID: chainId,
 				TIP7: &params.BlockConfig{FastNumber: big.NewInt(0)},
-				TIP8: &params.BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(-1)},
-				TIP9: &params.BlockConfig{SnailNumber: big.NewInt(20)}},
+				TIP8: &params.BlockConfig{FastNumber: big.NewInt(0), CID: big.NewInt(-1)}},
 			Alloc: types.GenesisAlloc{addr1: {Balance: big.NewInt(3000000)}},
 		}
 		genesis = gspec.MustFastCommit(db)

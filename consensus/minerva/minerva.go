@@ -50,7 +50,7 @@ var (
 	maxUint128 = new(big.Int).Exp(big.NewInt(2), big.NewInt(128), big.NewInt(0))
 
 	// sharedMinerva is a full instance that can be shared between multiple users.
-	sharedMinerva = New(Config{"", 3, 0, "", 1, 0, ModeNormal, 0})
+	sharedMinerva = New(Config{"", 3, 0, "", 1, 0, ModeNormal})
 
 	//SnailBlockRewardsBase Snail block rewards base value is 115.555555555555 * 10^12
 	SnailBlockRewardsBase = 115555555555555
@@ -205,7 +205,6 @@ type Config struct {
 	DatasetsInMem  int
 	DatasetsOnDisk int
 	PowMode        Mode
-	Tip9           uint64
 }
 
 // Minerva consensus
@@ -269,14 +268,12 @@ func (m *Minerva) NewTestData(block uint64) {
 
 // dataset tries to retrieve a mining dataset for the specified block number
 func (m *Minerva) getDataset(block uint64) *Dataset {
-	if m.config.Tip9 < block {
-		block = m.config.Tip9
-	}
 
 	var headerHash [STARTUPDATENUM][]byte
 	// Retrieve the requested ethash dataset
 	//each 12000 change the mine algorithm block -1 is make sure the 12000 is use epoch 0
-	epoch := uint64((block - 1) / UPDATABLOCKLENGTH)
+	//epoch := uint64((block - 1) / UPDATABLOCKLENGTH)
+	epoch := uint64(0)
 	currentI, futureI := m.datasets.get(epoch)
 	current := currentI.(*Dataset)
 
@@ -340,12 +337,13 @@ func (m *Minerva) getDataset(block uint64) *Dataset {
 		go func() {
 			//log.Info("start to create a future dataset")
 			if futureI != nil {
-				future := futureI.(*Dataset)
-
-				if !getHashList(&headerHash, epoch+1) {
-					return
-				}
-				future.Generate(m.datasets.future, &headerHash)
+				return
+				//future := futureI.(*Dataset)
+				//
+				//if !getHashList(&headerHash, epoch+1) {
+				//	return
+				//}
+				//future.Generate(m.datasets.future, &headerHash)
 			}
 		}()
 	}

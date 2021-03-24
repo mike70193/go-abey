@@ -330,10 +330,20 @@ func getFisrtState() *state.StateDB {
 	statedb, _ := state.New(common.Hash{}, state.NewDatabase(db))
 	return statedb
 }
+func getBytes() []byte {
+	return nil
+}
 func TestTip7(t *testing.T) {
 	statedb := getFisrtState()
 	toFirstBlock(statedb)
 
+	fmt.Println("finish")
+}
+func Test08(t *testing.T) {
+	fmt.Println("len(nil):",len(getBytes()))
+	addr := common.HexToAddress("0x46498c274686be5e3c01b9268ea4604da5142265")
+	fmt.Println("addr:",addr.Hex())
+	fmt.Println("abey-addr:",addr.StringToAbey())
 	fmt.Println("finish")
 }
 func generateAddr() common.Address {
@@ -620,9 +630,11 @@ func Test02(t *testing.T) {
 	fmt.Println("finish")
 }
 func Test03(t *testing.T) {
-	addr := generateAddr()
-	fmt.Println("addr:",addr.Hex())
-	fmt.Println("abey-addr:",addr.StringToAbey())
+	for i:=0;i<10;i++ {
+		addr := generateAddr()
+		fmt.Println("addr:",addr.Hex())
+		fmt.Println("abey-addr:",addr.StringToAbey())
+	}
 	fmt.Println("finish")
 }
 

@@ -67,7 +67,6 @@ func NewSimulatedBackendWithDatabase(database abeydb.Database, alloc types.Genes
 	params.SnailRewardInterval = big.NewInt(3)
 	genesis.Config.TIP7 = &params.BlockConfig{FastNumber: big.NewInt(10000)}
 	genesis.Config.TIP8 = &params.BlockConfig{FastNumber: big.NewInt(1000), CID: big.NewInt(10)}
-	genesis.Config.TIP9 = &params.BlockConfig{SnailNumber: big.NewInt(1000)}
 
 	genesis.MustFastCommit(database)
 	blockchain, _ := core.NewBlockChain(database, nil, genesis.Config, ethash.NewFaker(), vm.Config{})

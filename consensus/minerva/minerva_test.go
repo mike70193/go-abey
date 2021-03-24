@@ -135,7 +135,6 @@ func TestNewAlgorithm(t *testing.T) {
 		CachesOnDisk:   3,
 		DatasetsInMem:  1,
 		DatasetsOnDisk: 2,
-		Tip9:	 uint64(47000),
 	}
 	minerva := &Minerva{
 		config: config,
