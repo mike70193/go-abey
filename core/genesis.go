@@ -269,7 +269,7 @@ func (g *Genesis) ToFastBlock(db abeydb.Database) *types.Block {
 			if err != nil {
 				log.Error("ToFastBlock InsertSAccount", "error", err)
 			}
-			statedb.AddBalance(types.StakingAddress, big.NewInt(1000000000000000000))
+			//statedb.AddBalance(types.StakingAddress, big.NewInt(1000000000000000000))
 		}
 		_, err := impl.DoElections(1, 0)
 		if err != nil {
@@ -619,6 +619,10 @@ func DefaultTestnetGenesisBlock() *Genesis {
 		Mixhash:    common.HexToHash("0x0000000000000000000000000000000000000000000000000000000000000000"),
 		ParentHash: common.HexToHash("0x0000000000000000000000000000000000000000000000000000000000000000"),
 		Alloc: map[common.Address]types.GenesisAccount{
+			common.HexToAddress("0xf0C8898B2016Afa0Ec5912413ebe403930446779"): {Balance: amount1},
+			common.HexToAddress("0x3e3429F72450A39CE227026E8DdeF331E9973E4d"): {Balance: amount1},
+			common.HexToAddress("0xf353ab1417177F766497bF716D7aAd4ECd5f36C8"): {Balance: amount1},
+			common.HexToAddress("0x8fF345746C3d3435a105538E4c024Af5FE700598"): {Balance: amount1},
 			common.HexToAddress("0xf0C8898B2016Afa0Ec5912413ebe403930446779"): {Balance: amount1},
 		},
 		Committee: []*types.CommitteeMember{
