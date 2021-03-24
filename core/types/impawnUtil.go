@@ -173,7 +173,6 @@ type TimedChainReward struct {
 type ChainReward struct {
 	Height        uint64
 	St            uint64
-	Foundation    *RewardInfo      `json:"developerReward"`
 	CoinBase      *RewardInfo      `json:"blockminer"`
 	FruitBase     []*RewardInfo    `json:"fruitminer"`
 	CommitteeBase []*SARewardInfos `json:"committeeReward"`
@@ -181,7 +180,6 @@ type ChainReward struct {
 func CloneChainReward(reward *ChainReward) *ChainReward {
 	var res ChainReward
 	res.Height,res.St = reward.Height,reward.St
-	res.Foundation = reward.Foundation.clone()
 	res.CoinBase = reward.CoinBase.clone()
 	for _,v := range reward.FruitBase {
 		res.FruitBase = append(res.FruitBase,v.clone())
@@ -222,11 +220,10 @@ func ToBalanceInfos(items map[common.Address]*BalanceInfo) []*BalanceInfo {
 	return infos
 }
 
-func NewChainReward(height, tt uint64, found, coin *RewardInfo, fruits []*RewardInfo, committee []*SARewardInfos) *ChainReward {
+func NewChainReward(height, tt uint64, coin *RewardInfo, fruits []*RewardInfo, committee []*SARewardInfos) *ChainReward {
 	return &ChainReward{
 		Height:        height,
 		St:            tt,
-		Foundation:    found,
 		CoinBase:      coin,
 		FruitBase:     fruits,
 		CommitteeBase: committee,

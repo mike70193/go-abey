@@ -84,6 +84,10 @@ var (
 	NewRewardBegin = 53550
 	NewRewardCoin = new(big.Int).Mul(big.NewInt(80),BaseBig)
 	RewardEndSnailHeight = 1000000
+
+	NewRewardCoinForPow = new(big.Int).Mul(big.NewInt(3560),BaseBig)
+	RewardReduceInterval = 210000
+	NewRewardCoinForPos = new(big.Int).Mul(big.NewInt(570),BaseBig)
 )
 
 // ConstSqrt ...
