@@ -5,8 +5,8 @@
 package base58
 
 import (
-	"crypto/sha256"
 	"errors"
+	"golang.org/x/crypto/sha3"
 )
 
 // ErrChecksum indicates that the checksum of a check-encoded string does not verify against
@@ -16,10 +16,18 @@ var ErrChecksum = errors.New("checksum error")
 // ErrInvalidFormat indicates that the check-encoded string has an invalid format.
 var ErrInvalidFormat = errors.New("invalid format: VC and/or checksum bytes missing")
 
+// Keccak256 calculates and returns the Keccak256 hash of the input data.
+func Keccak256(data ...[]byte) []byte {
+	d := sha3.NewLegacyKeccak256()
+	for _, b := range data {
+		d.Write(b)
+	}
+	return d.Sum(nil)
+}
 // checksum: first four bytes of sha256^2
 func checksum(input []byte) (cksum [4]byte) {
-	h := sha256.Sum256(input)
-	h2 := sha256.Sum256(h[:])
+	h := Keccak256(input)
+	h2 := Keccak256(h[:])
 	copy(cksum[:], h2[:4])
 	return
 }

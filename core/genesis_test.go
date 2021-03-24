@@ -630,6 +630,15 @@ func Test02(t *testing.T) {
 	fmt.Println("finish")
 }
 func Test03(t *testing.T) {
+	a2 := common.HexToAddress("0x46498c274686be5e3c01b9268ea4604da5142265")
+	fmt.Println("addr:",a2.Hex())
+	fmt.Println("abey-addr:",a2.StringToAbey())
+	b1 := a2.Bytes()
+	b := make([]byte, 0, 3+len(b1)+4)
+	b = append(b, 0x43,0xe5,0x52)
+	b = append(b, b1[:]...)
+	b2 := crypto.Keccak256(b)
+	fmt.Println("b2",hex.EncodeToString(b2[:]))
 	for i:=0;i<10;i++ {
 		addr := generateAddr()
 		fmt.Println("addr:",addr.Hex())
