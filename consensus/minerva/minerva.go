@@ -58,12 +58,6 @@ var (
 	// Big1e6 up to wei  SnailBlockRewardsBase * this is wei
 	Big1e6 = big.NewInt(1e6)
 
-	// SnailBlockRewardsChangeInterval Snail block rewards change interval 4500 blocks
-	SnailBlockRewardsChangeInterval = 4500
-
-	// SnailBlockRewardsChangePercentage snall block rewards change interval decrease %2
-	SnailBlockRewardsChangePercentage = 2
-
 	//BaseBig ...
 	BaseBig = big.NewInt(1e18)
 
@@ -79,12 +73,7 @@ var (
 
 	//SqrtMax ...
 	SqrtMax = 6400
-
-	RewardMinerDecayEpoch = 50000
-	NewRewardBegin = 53550
-	NewRewardCoin = new(big.Int).Mul(big.NewInt(80),BaseBig)
-	RewardEndSnailHeight = 1000000
-
+	MaxReduce = 20
 	NewRewardCoinForPow = new(big.Int).Mul(big.NewInt(3560),BaseBig)
 	RewardReduceInterval = 210000
 	NewRewardCoinForPos = new(big.Int).Mul(big.NewInt(570),BaseBig)

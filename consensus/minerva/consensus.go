@@ -1186,24 +1186,18 @@ func powerf(x float64, n int64) float64 {
 }
 
 func getBaseRewardCoinForPow(height *big.Int) *big.Int {
-	ratio := big.NewInt(1)
-	ratio = ratio.Add(ratio,new(big.Int).Div(height,big.NewInt(int64(RewardReduceInterval))))
-	return new(big.Int).Div(NewRewardCoinForPow,ratio)
+	ratio := new(big.Int).Div(height,big.NewInt(int64(RewardReduceInterval)))
+	reward := new(big.Int).Set(NewRewardCoinForPow)
+
+	for i:=int64(0);i<ratio.Int64();i++ {
+		if i >= int64(MaxReduce-1) {
+			break
+		}
+		reward = new(big.Int).Div(reward,big.NewInt(2))
+	}
+	return reward
 }
 func getBaseRewardCoinForPos(height *big.Int) *big.Int {
 	return new(big.Int).Set(NewRewardCoinForPos)
 }
-func getRewardCoin(height *big.Int) *big.Int {
-	if height.Cmp(big.NewInt(int64(NewRewardBegin))) >= 0 {
-		last := new(big.Int).Sub(height,big.NewInt(int64(NewRewardBegin-1)))
-		loops := new(big.Int).Div(last,big.NewInt(int64(RewardMinerDecayEpoch))).Int64()
-		base := new(big.Int).Set(NewRewardCoin)
-		for i:=0;i<int(loops);i++ {
-			// decay 20% per epoch
-			tmp := new(big.Int).Div(new(big.Int).Mul(base,big.NewInt(20)),big.NewInt(100))
-			base = new(big.Int).Sub(base,tmp)
-		}
-		return base
-	}
-	return nil
-}
+
