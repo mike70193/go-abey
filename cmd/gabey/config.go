@@ -99,7 +99,7 @@ func makeConfigNode(ctx *cli.Context) (*node.Node, gethConfig) {
 	}
 	if ctx.GlobalBool(utils.SingleNodeFlag.Name) {
 		// set abeyconfig
-		prikey, _ := crypto.HexToECDSA("c1581e25937d9ab91421a3e1a2667c85b0397c75a195e643109938e987acecfc")
+		prikey, _ := crypto.HexToECDSA("229ca04fb83ec698296037c7d2b04a731905df53b96c260555cbeed9e4c64036")
 		cfg.Abey.PrivateKey = prikey
 		cfg.Abey.CommitteeKey = crypto.FromECDSA(prikey)
 
