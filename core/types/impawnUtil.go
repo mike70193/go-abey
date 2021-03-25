@@ -110,6 +110,9 @@ func (e *RewardInfo) clone() *RewardInfo {
 func (e *RewardInfo) String() string {
 	return fmt.Sprintf("[Address:%v,Amount:%s\n]", e.Address.String(), ToAbey(e.Amount).Text('f', 8))
 }
+func (e *RewardInfo) StringToAbey() string {
+	return fmt.Sprintf("[Address:%v,Amount:%s\n]", e.Address.StringToAbey(), ToAbey(e.Amount).Text('f', 8))
+}
 func FetchOne(sas []*SARewardInfos, addr common.Address) []*RewardInfo {
 	items := make([]*RewardInfo, 0, 0)
 	for _, val := range sas {
@@ -121,6 +124,24 @@ func FetchOne(sas []*SARewardInfos, addr common.Address) []*RewardInfo {
 		}
 	}
 	return items
+}
+func FetchOneToAbey(sas []*SARewardInfos, addr common.Address) map[string]interface{} {
+	items := make([]*RewardInfo, 0, 0)
+	for _, val := range sas {
+		if len(val.Items) > 0 {
+			saAddr := val.getSaAddress()
+			if bytes.Equal(saAddr.Bytes(), addr.Bytes()) {
+				items = mergeRewardInfos(items, val.Items)
+			}
+		}
+	}
+	infos := make([]string,0,0)
+	for _,v := range items {
+		infos = append(infos,v.StringToAbey())
+	}
+	return map[string]interface{}{
+		"committeeReward": infos,
+	}
 }
 func mergeRewardInfos(items1, itmes2 []*RewardInfo) []*RewardInfo {
 	for _, v1 := range itmes2 {
@@ -162,7 +183,13 @@ func (s *SARewardInfos) String() string {
 	}
 	return ss
 }
-
+func (s *SARewardInfos) StringToAbey() string {
+	var ss string
+	for _, v := range s.Items {
+		ss += v.StringToAbey()
+	}
+	return ss
+}
 type TimedChainReward struct {
 	St     uint64
 	Number uint64
@@ -176,6 +203,33 @@ type ChainReward struct {
 	FruitBase     []*RewardInfo    `json:"fruitminer"`
 	CommitteeBase []*SARewardInfos `json:"committeeReward"`
 }
+func (s *ChainReward) CoinRewardInfo()  map[string]interface{} {
+	feild := map[string]interface{}{
+		"blockminer": s.CoinBase.StringToAbey(),
+	}
+	return feild
+}
+func (s *ChainReward) FruitRewardInfo() map[string]interface{} {
+	infos := make([]string,0,0)
+	for _,v := range s.FruitBase {
+		infos = append(infos,v.StringToAbey())
+	}
+	feild := map[string]interface{}{
+		"fruitminer": infos,
+	}
+	return feild
+}
+func (s *ChainReward) CommitteeRewardInfo() map[string]interface{} {
+	infos := make([]string,0,0)
+	for _,v := range s.CommitteeBase {
+		infos = append(infos,v.StringToAbey())
+	}
+	feild := map[string]interface{}{
+		"committeeReward": infos,
+	}
+	return feild
+}
+
 func CloneChainReward(reward *ChainReward) *ChainReward {
 	var res ChainReward
 	res.Height,res.St = reward.Height,reward.St

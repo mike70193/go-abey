@@ -939,6 +939,30 @@ type SnailRewardContenet struct {
 	FruitMinerReward []map[common.Address]*big.Int
 	CommitteeReward  map[common.Address]*big.Int
 }
+func (s *SnailRewardContenet) RewardInfo() map[string]interface{} {
+	item := make(map[string]interface{})
+	bitem := make(map[string]interface{})
+	for k,v := range s.BlockMinerReward {
+		bitem[k.StringToAbey()] = (*hexutil.Big)(v)
+	}
+	items := make([]map[string]interface{}, 0, 0)
+	for _,val := range s.FruitMinerReward {
+		info := make(map[string]interface{})
+		for k,v := range val {
+			info[k.StringToAbey()] = (*hexutil.Big)(v)
+		}
+		items = append(items,info)
+	}
+	citem := make(map[string]interface{})
+	for k,v := range s.CommitteeReward {
+		citem[k.StringToAbey()] = (*hexutil.Big)(v)
+	}
+
+	item["blockminer"] = bitem
+	item["fruitminer"] = items
+	item["committeeReward"] = citem
+	return item
+}
 
 type BalanceChangeContent struct {
 	AddrWithBalance map[common.Address]*big.Int `json:"addrWithBalance"       gencodec:"required"`
